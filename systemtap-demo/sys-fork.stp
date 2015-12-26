@@ -1,0 +1,15 @@
+probe begin{
+	log("begin probe sys_fork()\n");
+}
+
+
+probe kernel.function("do_fork"){
+	printf("parent pid=%d, name:%s\n",ppid(), execname());	
+}
+
+probe kernel.function("do_fork").return {
+	printf("return val = %d\n",$return);
+}
+probe end{
+	log("end probe sys_fork()\n");
+}

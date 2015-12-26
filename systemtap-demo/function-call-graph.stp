@@ -1,0 +1,8 @@
+probe module("ext3").function("*").call {
+	printf("%s -> %s\n", thread_indent(1), probefunc())
+}
+
+
+probe module("ext3").function("*").return {
+	printf("%s <- %s\n", thread_indent(-1), probefunc())
+}

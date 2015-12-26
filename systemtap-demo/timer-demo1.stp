@@ -1,0 +1,8 @@
+probe timer.ms(500){
+	printf("MS: %s\n", ctime(gettimeofday_s()))
+}
+
+probe timer.s(1) {
+	printf("S: %s\n",ctime(gettimeofday_s()))
+}
+

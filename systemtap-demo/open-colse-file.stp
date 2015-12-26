@@ -1,0 +1,10 @@
+global open
+global names
+probe syscall.open.return{
+	open[execname(),$return] = gettimeofday_us();
+	names[execname(),$return] = user_string($filename);
+}
+
+probe kernel.function("sys_close"){
+	printf("%20s %30s %5d\n", execname(), names[execname(),	$fd],(gettimeofday_ns() - open[execname(), $fd]));
+}

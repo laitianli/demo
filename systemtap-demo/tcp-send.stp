@@ -1,0 +1,16 @@
+
+probe begin{
+	log("begin tcp probe.....\n");
+}
+
+probe end{
+	log("end tcp probe.....\n");
+}
+
+probe tcp.sendmsg{
+	printf("[%s:%d] send message(sock:%p,size:%d)\n",execname(),pid(),sock,size);
+}
+
+probe tcp.sendmsg.return{
+	printf("[%d] size data send success!\n",size);
+}

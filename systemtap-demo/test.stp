@@ -1,0 +1,11 @@
+//print(@hist_linear(agg, 0, 10, 1))
+//probe kernel.function("vfs_llseek"){
+//	printf("seek filename \n")
+//}
+
+//probe begin { log("hello systemtap!") exit() }
+probe ioblock.end {
+    printf("bio_endio rw=%d ",rw)
+    printf("sector=%d ",sector)
+    printf("size=%d\n",size)
+}

@@ -1,0 +1,38 @@
+global one
+global two
+global time
+
+function div:string(a:long, b:long){
+	total = a + b
+	mod = (100 * a) % total
+	return sprintf("%d.%d%%", (100*a)/total, mod*100/total);	
+}
+
+probe timer.profile{
+	if(cpu()==0)
+		one[execname(),tid()]++
+	if(cpu()==1)
+		two[execname(),tid()]++
+
+//	if(cpu()==2)
+//		one[execname(),tid()]++
+//	if(cpu()==3)
+//		one[execname(),tid()]++
+}
+
+probe begin{
+    time = gettimeofday_s()
+	printf("%20s %5s %19s %19s\n","process","TID","CPU0","CPU1")
+}
+
+probe end{
+	foreach([p,t] in two){
+		printf("%20s %5d %19s %19s\n", p, t, div(one[p,t],two[p,t]),div(two[p,t],one[p,t]))
+	}
+
+	foreach([p,t] in one){
+		printf("%20s %5d %18d%% %18d%%\n", p, t, 100, 0)
+	}
+	time = gettimeofday_s() - time
+	printf("\n Total.................:%5d secs.\n", time);
+}

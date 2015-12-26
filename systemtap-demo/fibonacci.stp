@@ -1,0 +1,15 @@
+function fib(i) {
+	if(i < 1)
+		error("bad number");
+
+	if(i == 1) 
+		return 1;
+	if(i == 2)
+		return 2;
+	return fib(i - 1) + fib( i - 2);
+}
+
+probe begin{
+	printf("11th fib number: %d\n", fib(11));
+	exit()
+}

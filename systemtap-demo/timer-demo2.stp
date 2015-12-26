@@ -1,0 +1,14 @@
+
+global time
+
+probe begin {
+	printf(" Current time               Time Difference(ms)\n")
+	printf("-------------------         ----------------------\n")
+	time = gettimeofday_ms()
+}
+
+probe timer.s(6).randomize(5){
+	printf("%s %20d\n", ctime(gettimeofday_s()), gettimeofday_ms() - time)
+	time = gettimeofday_ms()
+}
+

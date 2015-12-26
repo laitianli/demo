@@ -1,0 +1,30 @@
+//global exec
+probe begin{
+//	exec=@1	/* 字符串参数，$2-表示整形参数 */
+	printf("ioblock(generic_make_request) begin\n");	
+}
+
+probe end{
+	log("ioblock end\n");
+}
+/*generic_make_request*/
+probe ioblock.request{
+	localrw="read"
+	localexec=execname()
+	kjournald="kjournald"
+//	if(kjournald==localexec)
+//		return 0
+	//printf("localexec=%s\n",localexec)
+	if (kjournald!=localexec)
+	{
+		if (rw==1)
+		{
+			localrw="write"
+		}
+		else
+		{
+			localrw="read"
+		}
+		printf("(%s)devname = %s,sector=%d,size=%d,rw=%s\n",localexec,devname,sector,size,localrw);
+	}
+}

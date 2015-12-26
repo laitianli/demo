@@ -1,0 +1,15 @@
+probe begin{
+    log("begin test probe.\n")
+}
+
+#probe kernel.function("remap_pte_range@mm/memory.c")   //error
+#probe kernel.function("zeromap_page_range@mm/memory.c")
+probe kernel.function("zeromap_pud_range@mm/memory.c:1150-1154")
+#probe kernel.function("zeromap_pte_range@mm/memory.c") //error
+{
+    log("run remap_pte_range@mm/memory.c\n");
+}
+
+probe end{
+    log("end test probe.\n")
+}

@@ -1,0 +1,33 @@
+global names
+global open
+
+probe begin{
+	printf("%10s %12s %30s\n", "Process", "Open time(s)", "File name");
+}
+
+probe kernel.function("sys_open").return{
+	open[execname(), task_tid(task_current()), $return] = gettimeofday_us();
+	names[execname(), task_tid(task_current()), $return] = user_string($filename)
+}
+
+probe kernel.function("sys_close"){
+	open_time_ms = (gettimeofday_us() - open[execname(), task_tid(task_current()), $fd])
+
+	open_time_s = open_time_ms / 1000000;
+	 
+	if((open_time_s >= 1) && (names[execname(), task_tid(task_current()), $fd] != "" ))
+	{
+		printf("%10s %6d.%.5d %30s\n", execname(), open_time_s, open_time_ms % 1000000, names[execname(), task_tid(task_current()), $fd]);
+	}
+}
+
+
+
+
+
+
+
+
+
+
+

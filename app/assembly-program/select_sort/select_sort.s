@@ -1,6 +1,6 @@
 .section .data
 	array:
-		.btye 89, 10, 67, 1, 4, 24, 12, 34, 76, 3
+		.byte 89, 10, 67, 1, 4, 24, 12, 34, 76, 3
 	array_end:
 		.equ ARRAY_SIZE, array_end - array
 
@@ -21,8 +21,8 @@
 _start:
 	pushl	$usort_str
 	call	puts
+	jmp		_exit
 	addl	$4, %esp
-
 	pushl	$ARRAY_SIZE
 	pushl	$array
 	pushl	$array_fmt
@@ -62,7 +62,7 @@ push_loop:
 	pushl	%eax
 	pushl	%edx
 	call	printf
-	addl	%8, %esp
+	addl	$8, %esp
 	movl	-4(%ebp), %ecx
 	incl	%esi
 	loop	push_loop
@@ -84,7 +84,7 @@ sort_routine20:
 
 	xorl	%esi, %esi
 
-out_loop:
+outer_loop:
 	movl	%esi, -4(%ebp)
 	movl	%esi, %edi
 	incl	%edi
@@ -119,4 +119,4 @@ swap_vars:
 _exit:
 	movl	$1, %eax
 	movl	$0, %ebx
-	int		%0x80
+	int		$0x80

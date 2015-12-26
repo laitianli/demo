@@ -1,0 +1,30 @@
+probe begin{
+	log("ioscheduler begin.\n");
+}
+
+probe end{
+	log("ioscheduler end.\n");
+}
+
+probe kernel.function("elv_next_request@block/elevator.c").call
+{
+	printf("call elv_next_request q_addr=%p,\n",$q);
+}
+//probe kernel.statement(0xffff810123f9be78).absolute
+//{
+//	printf("function->%s\n",probefunc());
+//	printf("q_addr=%p, rq=%p\n",$q, $rq);
+//}
+probe kernel.function("elv_next_request@block/elevator.c")
+{
+//	printf("q_addr=%p, rq=%p\n",$q, $rq);
+	printf("q_addr=%p,\n",$q);
+}
+probe kernel.function("elv_next_request@block/elevator.c").return
+{
+	printf("return elv_next_request return value q_addr=%p,\n",$return);
+}
+#probe ioscheduler.elv_next_request
+#{
+#	printf(" elevator_name=%s, q_addr = %p\n", elevator_name, $q);
+#}

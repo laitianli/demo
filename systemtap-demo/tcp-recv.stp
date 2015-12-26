@@ -1,0 +1,15 @@
+probe begin{
+	log("begin tcp recv probe.....\n");
+}
+
+probe end{
+	log("end tcp recv probe....\n");
+}
+
+probe tcp.recvmsg{
+	printf("[%s:%d] send message(sock:%p,size:%d)(saddr->%s:%d,daddr->%s:%d)\n",execname(),pid(),sock,size,saddr,sport,daddr,dport);
+}
+
+probe tcp.recvmsg.return{
+	printf("[%s:%d] [%d] size data recv success! (saddr->%s:%d, daddr->%s:%d)\n",execname(),pid(),size,saddr,sport,daddr,dport);
+}

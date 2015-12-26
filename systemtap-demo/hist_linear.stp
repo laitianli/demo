@@ -1,0 +1,13 @@
+global reads
+
+probe begin{
+	log("begin netdev receive.\n")
+}
+
+probe netdev.receive{
+	reads <<< length
+}
+
+probe end{
+	print(@hist_linear(reads,0,10240,200));
+}
