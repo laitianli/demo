@@ -1,0 +1,2 @@
+0xe685289d	wake_to_read	/home/laitianli/demo/app_kernelmodules/kernelmodules/misc_mmap/misc-mmap-demo	EXPORT_SYMBOL
+0x8b64af3f	wake_to_write	/home/laitianli/demo/app_kernelmodules/kernelmodules/misc_mmap/misc-mmap-demo	EXPORT_SYMBOL

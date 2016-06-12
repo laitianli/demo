@@ -1,0 +1,1 @@
+cmd_/mnt/nfs/demo/app_kernelmodules/kernelmodules/chrdev/chrdev.ko := ld -m elf_x86_64 -r -o /mnt/nfs/demo/app_kernelmodules/kernelmodules/chrdev/chrdev.ko /mnt/nfs/demo/app_kernelmodules/kernelmodules/chrdev/chrdev.o /mnt/nfs/demo/app_kernelmodules/kernelmodules/chrdev/chrdev.mod.o

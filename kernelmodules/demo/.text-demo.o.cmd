@@ -1,0 +1,1 @@
+cmd_/home/laitianli/demo/app_kernelmodules/kernelmodules/demo/text-demo.o := ld -m elf_x86_64   -r -o /home/laitianli/demo/app_kernelmodules/kernelmodules/demo/text-demo.o /home/laitianli/demo/app_kernelmodules/kernelmodules/demo/demo.o 

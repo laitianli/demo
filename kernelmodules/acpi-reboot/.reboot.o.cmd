@@ -1,0 +1,1 @@
+cmd_/mnt/nfs/demo/app_kernelmodules/kernelmodules/acpi-reboot/reboot.o := ld -m elf_x86_64  -r -o /mnt/nfs/demo/app_kernelmodules/kernelmodules/acpi-reboot/reboot.o /mnt/nfs/demo/app_kernelmodules/kernelmodules/acpi-reboot/acpi-reboot.o

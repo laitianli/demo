@@ -1,0 +1,1 @@
+cmd_/home/laitianli/demo/app_kernelmodules/kernelmodules/misc_mmap/misc-mmap-demo.o := ld -m elf_x86_64   -r -o /home/laitianli/demo/app_kernelmodules/kernelmodules/misc_mmap/misc-mmap-demo.o /home/laitianli/demo/app_kernelmodules/kernelmodules/misc_mmap/encryption_request_mmap.o 

@@ -3,6 +3,18 @@
 #define VSYSCALL_START (-10UL << 20) /* 0xff600000 */
 #define VSYSCALL_FIRST_CALL (((VSYSCALL_END-VSYSCALL_START) >> PAGE_SHIFT) - 1) /*0x7FF*/
 #include <stdio.h>
+
+
+void print_buf(char* tag, unsigned char* buf, int len)
+{
+	int ii = 0;
+	printf("\n------------------%s-----------------len=%d\n",tag, len);
+	for(ii = 0; ii < len; ii++)
+	{
+		printf("aaaaaaaaaa\n");		//printf("%02X %s", buf[ii], (((ii+1)%16==0) ? "\n":" "));
+	}
+}
+
 int main(int argv,char** argc)
 {
 #if 1
@@ -26,5 +38,22 @@ int main(int argv,char** argc)
 	printf("VSYSCALL_END(-2UL << 20):0x%x\n", VSYSCALL_END);
 	printf("VSYSCALL_START(-10UL << 20): 0x%x\n", VSYSCALL_START);
 	printf("VSYSCALL_FIRST_CALL: 0x%x\n", VSYSCALL_FIRST_CALL);
+
+	unsigned char aa = 0xFF, bb = 0;
+
+	printf("0xFF+1=%02X\n", bb = aa += 1);
+	printf("bb=%02X\n", bb -= (unsigned char)1);
+
+	unsigned char buffer[12] = {1};
+	buffer[0] = 1;
+	buffer[1] = 2;
+	buffer[2] = 3;
+	memset(&buffer[3], 1, sizeof(buffer)-3);
+	print_buf("aaaaabefore", buffer, sizeof(buffer));
+
+	float fa = 10245.6;
+	float ftime=100;
+
+	printf("(float/float) %f/%f=%5.2f\n", fa, ftime, fa / ftime);
 return 0;
 }

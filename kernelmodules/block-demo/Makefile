@@ -19,4 +19,4 @@ default:
 endif
 
 clean:
-	rm -rf *.o *.ko .*.cmd *.mod.*  Module.symvers .tmp_versions modules.order	
+	rm -rf *.o *.ko .*.cmd *.mod.*  Module.symvers .tmp_versions modules.order Module.markers	
