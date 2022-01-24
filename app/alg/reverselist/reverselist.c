@@ -29,8 +29,15 @@ int reverse_list(struct single_list** head)
 
     return 0;
 }
-
-int reverse_list_recursive(struct single_list* head)
+/* 递归倒序列 */
+struct single_list* reverse_list_recursive(struct single_list** head)
 {
-    return 0;
+    if (!head)
+        return NULL;
+    if (!(*head) || !(*head)->next)
+        return *head;
+    struct single_list* node = reverse_list_recursive(&(*head)->next);
+    (*head)->next->next = *head;
+    (*head)->next = NULL;
+    return node; /* 倒序后的第一个 */
 }

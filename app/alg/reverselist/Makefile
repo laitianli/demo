@@ -7,7 +7,7 @@ INC=.
 OBJ=$(patsubst %.c,%.o,$(SRC))
 CFLAGS=-O0 -g
 %.o: %.c
-	gcc -Wall -o $@ -c $^ -I$(INC)
+	gcc -Wall -o $@ -c $^ -I$(INC) $(CFLAGS)
 
 $(BIN):$(OBJ)
 	gcc -o $@ $^ $(CFLAGS)

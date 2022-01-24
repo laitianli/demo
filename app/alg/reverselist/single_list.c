@@ -16,50 +16,82 @@ struct single_list* get_node(void)
     return node;
 }
 
-void add_node(struct single_list* head, int val)
+int add_node(struct single_list** head, int val)
 {
     struct single_list* p = NULL;
     struct single_list* node  = NULL;
     if (!head) {
-        return NULL;
+        return 0;
     }
-    p = head;
+    if (!*head) {
+        node = get_node();
+        if (!node) {
+            return 0;
+        }
+        node->val = val;
+        node->next = NULL;
+        *head = node;
+        return 1;
+    }
+    p = *head;
     while (p->next) {
         p = p->next;
     }
     node = get_node();
     if (!node) {
-        return NULL;
+        return 0;
     }
     node->val = val;
     node->next = NULL;
-    p->next = node;    
+    p->next = node;
+    return 1;
 }
 
-void del_node(struct single_listi** head, struct single_list* node)
+int del_node(struct single_list** head, struct single_list* node)
 {
     struct single_list* p = NULL;
 
-    if (!head || *head || !node) {
+    if (!head || !*head || !node) {
         return 0;
     }
     if (*head == node) {
         p = *head;
-        *head = *head->next;
+        *head = (*head)->next;
         free(p);
         return 1;
     }
-    p = head;
+    p = *head;
     while (p->next != node) {
         p = p->next;
     }
 
     p->next = p->next->next;
+    free(node);
     return 1;
 }
 
-void distroy_single_list(struct single_list* head)
+void destroy_single_list(struct single_list** head)
 {
-
+    if (!head) {
+        return ;
+    }
+    struct single_list* tmp = *head;
+    struct single_list* p = *head;
+    while (p) {
+        tmp = p;
+        p = p->next;
+        free(tmp);
+    }
+    *head = NULL;
 }
 
+void dump_single_list(struct single_list* head)
+{
+    struct single_list* p = head;
+    printf("list: ");
+    while (p) {
+        printf(" %d", p->val);
+        p = p->next;
+    }
+    printf("\n");
+}

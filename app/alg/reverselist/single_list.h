@@ -7,14 +7,12 @@ struct single_list {
 };
 
 
-struct single_list* get_node(void);
+int add_node(struct single_list** head, int val);
 
-void add_node(struct single_list* head, int val);
+int del_node(struct single_list** head, struct single_list* node);
 
-void del_node(struct single_list* head, struct single_list* node);
-
-void distroy_single_list(struct single_list* head);
-
+void destroy_single_list(struct single_list** head);
+void dump_single_list(struct single_list* head);
 #endif
 
 
