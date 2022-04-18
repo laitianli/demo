@@ -15,10 +15,10 @@ char *get_curr_timer(void)
     printf("str:%s\n", str);
 
     t = gmtime(&tv.tv_sec);
-    printf("%d-%d-%d %d:%d:%d\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
+    printf("%d-%02d-%02d %02d:%02d:%02d\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour + 8, t->tm_min, t->tm_sec);
     time_t tt = time(NULL);
     t = gmtime(&tt);
-    printf("%d-%d-%d %d:%d:%d\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour, t->tm_min, t->tm_sec);
+    printf("%d-%02d-%02d %02d:%02d:%02d\n", t->tm_year + 1900, t->tm_mon + 1, t->tm_mday, t->tm_hour + 8, t->tm_min, t->tm_sec);
     return NULL;
 }
 
