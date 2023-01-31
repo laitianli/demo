@@ -1,4 +1,5 @@
 
+MAKEFLAGS += --no-print-directory
 BIN=s_main
 
 SRC=$(wildcard *.c)

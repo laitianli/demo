@@ -1,0 +1,21 @@
+Status of IKE charon daemon (strongSwan 5.7.2, Linux 3.10.0-693.el7.x86_64, x86_64):
+  uptime: 3 minutes, since Mar 10 19:41:30 2022
+  malloc: sbrk 2150400, mmap 0, used 371904, free 1778496
+  worker threads: 11 of 16 idle, 5/0/0/0 working, job queue: 0/0/0/0, scheduled: 3
+  loaded plugins: charon tpm random nonce x509 revocation constraints pubkey pem openssl curl kernel-netlink resolve socket-default stroke vici updown eap-identity eap-md5 eap-dynamic eap-tls counters
+Listening IP addresses:
+  192.168.42.128
+  192.168.80.128
+  192.168.122.1
+Connections:
+    test_128:  %any...192.168.80.133  IKEv2
+    test_128:   local:  [192.168.80.128] uses pre-shared key authentication
+    test_128:   remote: [192.168.80.133] uses pre-shared key authentication
+    test_128:   child:  dynamic === dynamic TUNNEL
+Security Associations (1 up, 0 connecting):
+    test_128[1]: ESTABLISHED 3 minutes ago, 192.168.80.128[192.168.80.128]...192.168.80.133[192.168.80.133]
+    test_128[1]: IKEv2 SPIs: eb44e61daf3684f1_i* d825184dd9066896_r, pre-shared key reauthentication in 23 hours
+    test_128[1]: IKE proposal: 3DES_CBC/HMAC_MD5_96/PRF_HMAC_MD5/MODP_1024
+    test_128{1}:  INSTALLED, TUNNEL, reqid 1, ESP SPIs: c2f64883_i c770834c_o
+    test_128{1}:  3DES_CBC/HMAC_MD5_96, 0 bytes_i, 0 bytes_o, rekeying in 50 minutes
+    test_128{1}:   192.168.80.128/32 === 192.168.80.133/32
