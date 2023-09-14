@@ -5,7 +5,7 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-#define BUF_SIZE 30
+#define BUF_SIZE 3000
 void error_handling(char *message);
 
 int main(int argc, char *argv[])
@@ -41,7 +41,9 @@ int main(int argc, char *argv[])
     {
         clnt_adr_sz = sizeof(clnt_adr);
         str_len = recvfrom(serv_sock, message, BUF_SIZE, 0, (struct sockaddr*)&clnt_adr, &clnt_adr_sz);
-        sendto(serv_sock, message, str_len, 0, (struct sockaddr*)&clnt_adr, clnt_adr_sz);
+		printf("recv len: %d\n", str_len);
+        int send_len = sendto(serv_sock, message, str_len, 0, (struct sockaddr*)&clnt_adr, clnt_adr_sz);
+		printf("send_len: %d\n", send_len);
     }
     close(serv_sock);
     return 0;
