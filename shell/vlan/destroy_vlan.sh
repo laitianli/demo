@@ -1,5 +1,5 @@
 #!/bin/bash
-NIC_NAME=ens38
+NIC_NAME=ens34
 VLANID=5
 VLAN_NIC=${NIC_NAME}.${VLANID}
 

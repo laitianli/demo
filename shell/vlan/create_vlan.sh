@@ -1,8 +1,8 @@
 #!/bin/bash
-NIC_NAME=ens38
+NIC_NAME=ens34
 VLANID=5
 VLAN_NIC=${NIC_NAME}.${VLANID}
-VLAN_IP=20.20.20.3/24
+VLAN_IP=20.20.20.2/24
 VLAN_BRD=20.20.20.255
 
 ip link add link ${NIC_NAME}  name ${VLAN_NIC} type vlan id ${VLANID}
