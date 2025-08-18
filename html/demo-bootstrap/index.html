@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- 上述3个meta标签*必须*放在最前面，任何其他内容都*必须*跟随其后！ -->
+    <title>Bootstrap 101 Template</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="static/bootstrap-3.4.1-dist/css/bootstrap.min.css">
+    <style type="text/css">
+        img {
+            width: 100%;
+        }
+
+        /* 控制轮播中图片大小 */
+        .damu-carousel,
+        .damu-carousel .item {
+            height: 500px;
+            overflow: hidden;
+        }
+
+        /* 控制轮播中文字的位置 */
+        .carousel-caption {
+            bottom: 10%;
+        }
+
+        @media only screen and (max-width: 768px) {
+            .carousel-caption {
+                bottom: 5%;
+            }
+
+            .damu-carousel,
+            .damu-carousel .item {
+                height: 500px;
+            }
+        }
+
+        .damu-thumbnail img {
+            width: 474px;
+            height: 474px;
+        }
+
+        .damu-threeC {
+            margin-top: 50px;
+        }
+
+        .damu-hr {
+            margin: 50px auto;
+
+        }
+
+        .damu-hr>hr {
+            border: 1px solid bisque;
+        }
+
+        #labe-tab {
+            height: 500px;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 1.导航条 -->
+    <nav class="navbar navbar-inverse navbar-fixed-top">
+        <div class="container">
+            <!-- Brand and toggle get grouped for better mobile display -->
+            <div class="navbar-header">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
+                    <span class="sr-only">Toggle navigation</span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                    <span class="icon-bar"></span>
+                </button>
+                <a class="navbar-brand" href="#">现代浏览器博物馆</a>
+            </div>
+
+            <!-- Collect the nav links, forms, and other content for toggling -->
+            <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+                <ul class="nav navbar-nav">
+                    <li class="active"><a href="#">综述 <span class="sr-only">(current)</span></a></li>
+                    <li><a href="#">简述</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
+                            aria-expanded="false">特点 <span class="caret"></span></a>
+                        <ul class="dropdown-menu" id="damu-nav">
+                            <li><a href="#chrome">Chrome</a></li>
+                            <li><a href="#firefox">FireFox</a></li>
+                            <li><a href="#safari">Safari</a></li>
+                            <li><a href="#opera">Opera</a></li>
+                            <li><a href="#IE">IE</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:;" data-target="#myModal" data-toggle="modal">关于</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- 2.轮播图 data-interval="1000":图片切换时间间隔, data-wrap="false": 到最后一张图片时停止轮播-->
+    <div id="carousel-example-generic" class="carousel slide damu-carousel" data-ride="carousel" data-interval="1000">
+        <!-- Indicators -->
+        <ol class="carousel-indicators">
+            <li data-target="#carousel-example-generic" data-slide-to="0" class="active"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="1"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="2"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="3"></li>
+            <li data-target="#carousel-example-generic" data-slide-to="4"></li>
+        </ol>
+
+        <!-- Wrapper for slides -->
+        <div class="carousel-inner" role="listbox">
+            <div class="item active">
+                <img src="images/big-chrome.jpg">
+                <div class="carousel-caption">
+                    <h2>chrome</h2>
+                </div>
+            </div>
+            <div class="item">
+                <img src="images/big-firefox.jpeg">
+                <div class="carousel-caption">
+                    <h2>firefox</h2>
+                </div>
+            </div>
+            <div class="item">
+                <img src="images/big-safari.jpeg">
+                <div class="carousel-caption">
+                    <h2>safari</h2>
+                </div>
+            </div>
+            <div class="item">
+                <img src="images/big-opera.jpg">
+                <div class="carousel-caption">
+                    <h2>opera</h2>
+                </div>
+            </div>
+            <div class="item">
+                <img src="images/big-IE.jpeg">
+                <div class="carousel-caption">
+                    <h2>IE</h2>
+                </div>
+            </div>
+        </div>
+
+        <!-- Controls -->
+        <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+            <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+            <span class="sr-only">Previous</span>
+        </a>
+        <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+            <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+            <span class="sr-only">Next</span>
+        </a>
+    </div>
+    <!-- <h1>你好，世界！</h1>
+    <a href="#" id="test">start</a>
+    <a href="#" id="test2">stop</a> -->
+    <!-- 3.三列布局 -->
+    <div class="container damu-threeC">
+        <div class="row">
+            <div class="col-md-4 damu-thumbnail text-center">
+                <img src="images/small-chrome.jpeg">
+                <div class="caption">
+                    <h3>chrome</h3>
+                    <p>Google Chrome, 是一个由谷歌公司开发的的浏览器</p>
+                    <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                </div>
+            </div>
+            <div class="col-md-4 damu-thumbnail  text-center">
+                <img src="images/small-firefox.jpg">
+                <div class="caption">
+                    <h3>firefox</h3>
+                    <p>firefox, 是一个由火狐公司开发的的浏览器</p>
+                    <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                </div>
+            </div>
+            <div class="col-md-4 damu-thumbnail  text-center">
+                <img src="images/small-safari.jpeg">
+                <div class="caption">
+                    <h3>safari</h3>
+                    <p>safari, 是一个由苹果公司开发的的浏览器</p>
+                    <p><a href="#" class="btn btn-default" role="button">Button</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 4.画线 -->
+    <div class="container damu-hr">
+        <hr>
+    </div>
+
+    <!-- 5.标签页面 -->
+    <div class="container" id="labe-tab">
+        <!-- Nav tabs -->
+        <ul class="nav nav-tabs" role="tablist" id="damu-list">
+            <li role="presentation" class="active"><a href="#chrome" aria-controls="chrome" role="tab" data-toggle="tab">chrome</a></li>
+            <li role="presentation"><a href="#firefox" aria-controls="firefox" role="tab" data-toggle="tab">firefox</a> </li>
+            <li role="presentation"><a href="#safari" aria-controls="safari" role="tab" data-toggle="tab">safari</a> </li>
+            <li role="presentation"><a href="#opera" aria-controls="opera" role="tab" data-toggle="tab">opera</a> </li>
+            <li role="presentation"><a href="#IE" aria-controls="IE" role="tab" data-toggle="tab">IE</a></li>
+        </ul>
+        <!-- Tab panes -->
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="chrome">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h3>chrome 浏览器</h3>
+                            Google Chrome是由Google开发的一款设计简单、高效的Web浏览工具。Google Chrome的特点是简洁、快速。Google
+                            Chrome支持多标签浏览，每个标签页面都在独立的“沙箱”内运行，
+                            在提高安全性的同时，一个标签页面的崩溃也不会导致其他标签页面被关闭。此外，Google Chrome基于更强大的JavaScript V8引擎，这是当前Web浏览器所无法实现的。
+                            64位的Chrome使用了更现代的指令集、针对64位处理器对编译器进行了特别优化，带来了更多的功能参数和寄存器存储的速度优势，因此会有明显的速度提升，
+                            特别是图形和多媒体内容的处理会变得更为流畅，平均性能提升25%。安全性和稳定性也有着相当大的提升，在渲染Web内容时的崩溃几率会有效下降。
+                            Chrome内置Flash Player浏览器视频插件，方便用户在线观看视频。
+                        </div>
+                        <div class="col-md-5">
+                            <img src="images/small-chrome.jpeg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="firefox">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h3>firefox 浏览器</h3>
+                            Firefox使用Gecko排版引擎，支持多种操作系统，如Windows、macOS及GNU/Linux等。Firefox有两个升级渠道：快速发布版和延长支持版（ESR）。
+                            快速发布版每四周发布一个主要版本，此四周期间会有修复崩溃和安全隐患的小版本。延长支持版每42周发布一个主要版本，期间至少每四周才有修复崩溃、安全隐患和政策更新相关的小版本。
+                            由于该浏览器开放了源代码，因此还有一些第三方编译版供使用，如pcxFirefox、苍月浏览器、tete009等。Firefox使用Gecko排版引擎，支持多种操作系统，如Windows、macOS及GNU/Linux等。
+                            Firefox有两个升级渠道：快速发布版和延长支持版（ESR）。快速发布版每四周发布一个主要版本，此四周期间会有修复崩溃和安全隐患的小版本。延长支持版每42周发布一个主要版本，期间至少每四周才有修复崩溃、安全隐患和政策更新相关的小版本。
+                            由于该浏览器开放了源代码，因此还有一些第三方编译版供使用，如pcxFirefox、苍月浏览器、tete009等。
+                        </div>
+                        <div class="col-md-5">
+                            <img src="images/small-firefox.jpg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="safari">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h3>safari 浏览器</h3>
+                            Safari是一款由苹果公司开发的网页浏览器，是各类苹果设备（如Mac、iPhone、iPad、iPod Touch）的默认浏览器。Safari使用WebKit浏览器引擎。
+                            Safari，作为苹果计算机的操作系统macOS中的浏览器，它用来取代之前的Internet Explorer for Mac。Safari 以惊人速度渲染网页。
+                            与Mac及iPod touch、iPhone、iPad兼容。让最爱网站一目了然。聪明的它还会检查拼写和语法。
+                            2022年5月，苹果在一项联合计划中宣布，将致力于在未来一年，在其控制的所有移动、桌面和浏览器平台上打造无密码登录系统。
+                        </div>
+                        <div class="col-md-5">
+                            <img src="images/small-safari.jpeg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="opera">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h3>Opera 浏览器</h3>
+                            Opera浏览器，是一款挪威Opera Software
+                            ASA公司制作的支持多页面标签式浏览的网络浏览器，是跨平台浏览器可以在Windows、Mac和Linux三个操作系统平台上运行。Opera浏览器创始于1995年4月。2019.1.31日最新版本58.0(58.0.3135.53)。
+                            2016年2月确定被奇虎360和昆仑万维收购。2018年6月29日，Opera向SEC提交了上市申请。
+                            2023年5月6日，据昆仑万维集团官微消息，旗下海外信息分发及元宇宙平台Opera近日发布了适配AI的浏览器版本Opera
+                            One，有望在2023年取代旗舰版Opera浏览器。5月24日，昆仑万维旗下Opera正式推出人工智能服务Aria。
+                            2025年5月，Opera推出“代理浏览器”Opera Neon。
+                        </div>
+                        <div class="col-md-5">
+                            <img src="images/small-opera.jpeg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="IE">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-md-7">
+                            <h3>IE 浏览器</h3>
+                            Internet
+                            Explorer,IE浏览器是微软开发的经典网络浏览器，提供了标签式浏览、安全增强功能和与Windows操作系统的集成等特点。本网站提供IE浏览器的最新版本下载，以及Microsoft
+                            Edge的下载和介绍
+                        </div>
+                        <div class="col-md-5">
+                            <img src="images/small-IE.jpg">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- 版本权 -->
+    <div class="container">
+        &copy;测试版权
+    </div>
+
+    <!-- 模态框 -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="myModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                            aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    <p>这是一个模态框&hellip;</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="static/js/jquery-3.7.1.js"></script>
+    <script src="static/bootstrap-3.4.1-dist/js/bootstrap.min.js"></script>
+</body>
+
+<script type="text/javascript">
+    // 通过jQuery控制图片切换属性
+    $(function () {
+        $('.carousel').carousel({
+            interval: 2000,
+            pause: null,
+            wrap: false
+        })
+
+        $('#test').click(function () {
+            $('.carousel').carousel('cycle')
+        })
+        $('#test2').click(function () {
+            $('.carousel').carousel('pause')
+        })
+        // 这个还有问题，无法跳转
+        $("#damu-nav > li > a").click(function(e){
+            var href = $(this).attr('href');
+            $("#damu-list > li > a['href="+(href)+"']").tab('show');
+            $(document).scrollTop($("#labe-tab").offset().top);
+            e.preventDefault();
+        })
+    })
+</script>
+
+</html>

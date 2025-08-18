@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    h3{
+        height: 500px;
+    }
+</style>
+<body>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <h3>浏览器滚动防止节流</h3>
+    <script>
+        function throttle(fn, delay) {
+            var valid = true;
+            return function(){
+                if (!valid)
+                    return false;
+                valid = false;
+                setTimeout(function(){
+                    fn();
+                    valid = true;
+                }, delay);
+            }
+        }
+
+        window.onscroll = throttle(scrollHandle, 300);
+        function scrollHandle(){
+            var scroll = document.documentElement.scrollTop;
+            console.log(scroll)
+        }
+    </script>
+</body>
+</html>

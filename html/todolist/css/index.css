@@ -1,0 +1,68 @@
+/* * {
+        box-sizing: border-box;
+        margin: 0px;
+        padding: 0px;
+      } */
+
+/* .demo-box {
+    display: flex;
+    align-items: center;
+    gap: 10px; 
+  } */
+.center {
+  display: flex;
+  justify-content: center; /* 水平居中 */
+  align-items: center;     /* 垂直居中 */
+  /*flex-direction: column; */ /* 子元素垂直排列 */
+}
+
+.center1 {
+  display: flex;          /* 启用 Flex 布局 */
+  align-items: center;   /* 垂直居中对齐 */
+  gap: 10px;             /* 设置标签和输入框的间距 */
+}
+footer {
+  display: flex;
+  justify-content: center;
+  padding: 5px;
+  background-color: #45a1ff;
+  color: #fff;
+}
+
+#todolist li {
+  display: flex; /* 启用flex布局 */
+  align-items: center; /* 垂直居中 */
+  gap: 10px; /* 可选，设置元素间距 */
+  border: #45a1ff;
+  background-color: #ed0c0c3b;
+  margin-bottom: 8px; /* 设置li之间的间隔 */
+  padding: 10px; /* 设置li内部填充 */
+  border-radius: 4px; /* 可选：添加圆角效果 */
+  width: 800px;
+}
+
+#donelist li {
+  display: flex; /* 启用flex布局 */
+  align-items: center; /* 垂直居中 */
+  gap: 10px; /* 可选，设置元素间距 */
+  border: #45a1ff;
+  background-color: #f4eeee;
+  margin-bottom: 8px; /* 设置li之间的间隔 */
+  padding: 10px; /* 设置li内部填充 */
+  border-radius: 4px; /* 可选：添加圆角效果 */
+  width: 800px;
+}
+
+#donelist li p ,#todolist li p {
+  width: 700px; /* 固定p标签宽度 */
+  margin: 0; /* 移除p标签默认的上下边距 */
+  white-space: nowrap; /* 防止文本换行 */
+  overflow: hidden; /* 隐藏超出部分 */
+  text-overflow: ellipsis; /* 超出显示省略号 */
+}
+
+h2 {
+  display: flex;          /* 启用Flex布局 */
+  align-items: center;   /* 垂直居中对齐 */
+  gap: 700px;            /* 设置文字与span的间隔为500px */
+}

@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .mouse_move_class {
+            width: 100px;
+            height: 100px;
+            background-color: red;
+        }
+
+        div,
+        .root {
+            width: 400px;
+            height: 200px;
+            background-color: blanchedalmond;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+            background-color: brown;
+        }
+    </style>
+</head>
+
+<body>
+
+    <button id="html_event" , onclick="html_onclick()">HTML按钮</button>
+    <button id="dom_btn1">DOM1按钮</button>
+    <button id="dom_btn2">DOM2按钮</button>
+    <button id="dom_dblbtn2">DOM2双击按钮</button>
+    <div id="mouse_move" class="mouse_move_class">鼠标事件</div>
+    <br>
+    <div class="root" id="root">
+        键盘阻止
+        <div class="box" id="box"></div>
+    </div>
+    <br>
+    <div class="key_input" id="key_input">键盘输入事件
+        <input type="text" id="username">
+    </div>
+
+
+
+    <script>
+        function html_onclick() {
+            alert("点击了HTML按钮")
+        }
+
+        var btdom_btn1 = document.getElementById("dom_btn1");
+        btdom_btn1.onclick = function () {
+            alert("点击了DOM1按钮")
+        }
+        /*
+        click, dblclick
+        mousedown
+        mouseup
+        mousemove
+        mouseenter
+        mouseleave
+        mouseover
+        mouseout
+        wheel
+        */
+        var btdom_btn2 = document.getElementById("dom_btn2");
+        btdom_btn2.addEventListener("click", function (event) {
+            // alert("点击了DOM2按钮 - 1")
+            console.log(event.target);
+            console.log(event.type);
+        })
+        btdom_btn2.addEventListener("click", function () {
+            alert("点击了DOM2按钮 - 2 - 不会覆盖")
+        })
+
+        var dom_dblbtn2 = document.getElementById("dom_dblbtn2");
+        dom_dblbtn2.addEventListener("dblclick", function () {
+            alert("点击了DOM2按钮-双击 - 1")
+        })
+
+        var dom_mousemove = document.getElementById("mouse_move");
+        dom_mousemove.addEventListener("mousemove", function () {
+            console.log("mousemve to dev");
+
+        })
+
+        dom_mousemove.addEventListener("mouseenter", function () {
+            console.log("mousemve to enter");
+
+        })
+
+        dom_mousemove.addEventListener("mouseleave", function () {
+            console.log("mousemve to leave");
+
+        })
+
+        var root = document.getElementById("root");
+        var box = document.getElementById("box");
+        root.onclick = function () {
+            console.log("button root")
+        }
+        box.onclick = function (event) {
+            // 阻止事件从box传递给父节点root
+            event.stopPropagation();
+
+            console.log("button box")
+        }
+
+        var username = document.getElementById("username");
+        username.onkeyup = function (event) {
+            console.log("onkeyup keycode: " + event.keyCode + "val:" + event.target.value);
+        }
+        username.onkeydown = function (event) {
+            console.log("onkeydonw keycode: " + event.keyCode + "val:" + event.target.value);
+        }
+    </script>
+</body>
+
+</html>

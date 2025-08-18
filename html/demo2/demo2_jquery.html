@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>demo2-jquery</title>
+    <style>
+        ul {
+            width: 450px;
+            padding-left: 80px;
+        }
+        ul li {
+            line-height: 25px;
+            border-bottom: 1px dashed #cccccc;
+            display: none;
+        }
+        input {
+            float: right;
+        }
+        ul li a {
+            float: right;
+        }
+    </style>
+    <script src="js/jquery.js"></script>
+    <script>
+        $(function(){
+            $("#test_ul").children("li").show();
+
+            $(".btn").on("click", function() {
+                var li = $("<li></li>")
+                li.html($(".test").val() + "<a href='javascript:;'> 删除</a>");
+                $("ul").prepend(li);
+                li.slideDown();
+                $(".test").val("")
+            })
+
+            $("ul").on("click","a", function(){
+                $(this).parent().slideUp(function(){
+                    $(this).remove()
+                })
+            })
+        }) 
+    </script>
+</head>
+<body>
+    <div class="box" id="weibo">
+        <span>微博发布</span>
+        <br>
+        <textarea name="" class="test" cols="100" rows="10" id=""></textarea>
+        <button class="btn">发布</button>
+        <ul></ul>
+    </div>
+    <table>
+        <tr>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <!-- <td>单元格</td> -->
+            <td>单元格</td>
+        </tr>
+        <tr>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+        </tr>
+        <tr>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+        </tr>
+        <tr>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+        </tr>
+        <tr>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+            <td>单元格</td>
+        </tr>
+    </table>
+</body>
+</html>

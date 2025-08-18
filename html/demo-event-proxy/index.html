@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <ul id="ul_id">
+        <li>列表1</li>
+        <li>列表2</li>
+        <li>列表3</li>
+        <li>列表4</li>
+        <li>列表5</li>
+    </ul>
+</body>
+
+<script>
+    // 只执行一次
+    setTimeout(function(){
+        console.log("setTimeout timeout")
+    }, 1000);
+
+    // 循环执行，间隔1s
+    setInterval(function(){
+        console.log("set interval timeout");
+    }, 1000)
+    /* 要获取li标签的onclick事件，但是把事件安装在父节点ul标签上 */
+    var ul = document.getElementById("ul_id");
+    ul.onclick = function(event){
+        console.log("点击了列表："+event.target.innerHTML + " 类型： " + event.target.tagName)
+    }
+</script>
+</html>

@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" id="username">
+    <br>
+    <input type="text" id="passwd">
+
+    <form id="myForm" onsubmit="submitHandle" action="url地址">
+        <!-- 关键字一定是name，否则url无法组成username=<input> -->
+        <input type="text" name="username">
+        <input type="password">
+        <!-- <button onclick="resetHandle">重置数据</button> -->
+        <button>提交表单数据</button>
+    </form>
+    <script>
+        var username = document.getElementById("username")
+        username.oninput = function(event){
+            // oninput获取不到keyCode值，undifined
+            console.log("input recv oninput event: "  + event.keyCode + " value: " + event.target.value)
+        }
+
+        username.onselect = function(event) {
+            console.log("input recv onselect")
+        }
+        var passwd = document.getElementById("passwd");
+        passwd.onchange = function(event) {
+            console.log("input passwd recv onchange")
+        }
+
+        // 会把页面所有input输入框重叠
+        var myForm = document.getElementById("myForm");
+        function resetHandle(){
+            myForm.reset(); //提交到表单中的reset事件
+        }
+
+        function submitHandle(){
+            console.log("将input数据提交到服务器")
+        }
+    </script>
+</body>
+</html>
