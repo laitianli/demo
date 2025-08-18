@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<style>
+    /* 标签选择器 */
+    body {
+        background-color: antiquewhite;
+    }
+
+    h1 {
+        color: orange;
+        text-align: center;
+        /* left: 50%;
+        top: 50%; */
+        /* font-family: "Times New Roman"; */
+    }
+
+    p {
+        font-family: "Times New Roman";
+        font-size: 30px;
+    }
+
+    #test_p {
+        color: aquamarine;
+        /* font-size: 50px; */
+    }
+
+    .test_sector {
+        color: red;
+        font-size: 50px;
+    }
+
+    .test_center {
+        text-align: center;
+    }
+
+    .test_color {
+        color: red;
+    }
+
+    .test_font {
+        font-size: 40px;
+    }
+
+    .border {
+        border: 2px solid #000;
+    }
+
+    #bgc_1 {
+        background-color: bisque;
+        text-align: center;
+    }
+
+    #bgc_2 {
+        background-color: aqua;
+        text-align: center;
+    }
+
+    #bgc_3 {
+        background-color: rgb(209, 196, 255);
+        text-align: center;
+    }
+
+    .div_size {
+        width: auto;
+        height: 600px;
+    }
+
+    .div_bgi {
+        background-image: url("images/yizhi.png");
+        background-repeat: repeat-x;
+
+    }
+
+    .div_word_pic {
+        width: auto;
+        height: 400px;
+        background-image: url("images/img_tree.png");
+        background-repeat: no-repeat;
+        background-position: right top;
+    }
+</style>
+
+<body>
+    <div>
+        <h1>1.CSS实例--标签选择器</h1>
+    </div>
+
+    <p>这是一个P标签</p>
+
+    <h1>2.CSS实例--ID选择器</h1>
+    <div>
+        <p id="test_p" class="border">这是一个ID选择器，优先级高于标签选择器</p>
+    </div>
+
+    <h1>3.CSS实例--Class选择器</h1>
+    <div class="test_sector border">这是一个Class类选择器</div>
+
+    <h1>4.CSS实例--多个Class选择器</h1>
+    <div class="test_center test_color test_font border">这是一个由test_font、test_color和test_center三个选择器共同作用的结果</div>
+
+    <h1>5.CSS实例--这是一个修改背景的样式</h1>
+    <div class="border">
+        <div id="bgc_1">背景1</div>
+        <div id="bgc_2">背景2</div>
+        <div id="bgc_3">背景3</div>
+    </div>
+
+
+    <h1>6.CSS实例--这是一个修改背景图片的样式</h1>
+    <div class="div_size div_bgi border">这是一张背景图片div</div>
+
+    <h1>7.CSS实例--这是一个显示文本和背景图片的div</h1>
+    <div class="div_word_pic border">
+        <p>背景图片不重复，设置 position 实例。</p>
+        <p>背景图片只显示一次，并与文本分开。</p>
+        <p>实例中还添加了 margin-right 属性用于让文本与图片间隔开。</p>
+    </div>
+
+    <h1>8.CSS实例--这是一个显示文本属性</h1>
+    <div>
+        <a href="https://www.runoob.com/css/css-text.html">链接章节</a>
+        
+    </div>
+
+</body>
+
+</html>
