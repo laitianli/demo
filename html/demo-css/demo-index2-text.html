@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS文本格式</title>
+    <style>
+        /* body {
+            color: black;
+        } */
+        p.text1 {
+            color: #00ff00;
+            text-align: center;
+        }
+
+        p.text2 {
+            color: rgb(255, 0, 0);
+        }
+
+        /* 这是控制文字方向 */
+        p.text3 {
+            font-size: 50px;
+            direction: rtl;
+            unicode-bidi: bidi-override;
+        }
+
+        p.text4 {
+            word-spacing: 30px;
+        }
+
+        p.date {
+            text-align: right;
+
+        }
+
+        p.main {
+            text-align: justify;
+            /* justify:当浏览器的窗口改变，文本布局也跟着改变 */
+            text-indent: 30px;
+            /* 段落缩进30px */
+            line-height: 50px;
+            /* 控制行高 */
+        }
+
+        p a {
+            text-decoration: none;
+        }
+
+        p.overline {
+            text-decoration: overline;
+        }
+
+        p.line_through {
+            text-decoration: line-through;
+        }
+
+        p.underline {
+            text-decoration: underline;
+        }
+
+        .border {
+            border: 2px solid #000;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="border" style="background-color: antiquewhite;">
+        <h3>一、这是字体的颜色和对齐</h3>
+        <p class="text1">这是一个绿色的文字</p>
+        <p class="text2">这是一个红色的文字</p>
+        <p class="text3">这是一个控制文字方向，文字大小font-size:50px</p>
+        <p class="text4">这是使用word-spacing来控制字符间距的样式</p>
+        <p class="date">2025-08-20 21:47</p>
+        <p class="main">
+            当我年轻的时候，我梦想改变这个世界；当我成熟以后，我发现我不能够改变这个世界，我将目光缩短了些，决定只改变我的国家；当我进入暮年以后，我发现我不能够改变我们的国家，我的最后愿望仅仅是改变一下我的家庭，但是，这也不可能。当我现在躺在床上，行将就木时，我突然意识到：如果一开始我仅仅去改变我自己，然后，我可能改变我的家庭；在家人的帮助和鼓励下，我可能为国家做一些事情；然后，谁知道呢?我甚至可能改变这个世界。”
+        </p>
+        <p><b>注意：</b> 重置浏览器窗口大小查看 &quot;justify&quot; 是如何工作的。</p>
+    </div>
+    <br>
+    <div class="border" style="background-color: aqua;">
+        <h3>二、这是文本上的删除线、下划线、上划线</h3>
+        <p><a href="https://www.runoob.com/css/css-text.html">1.css-text文本:使用text-decoration: none来删除链接的下划线--这是一个链接</a>
+        </p>
+        <p class="overline">2.css-text文本：使用text-decoration：overline添加上划线</p>
+        <p class="line_through">3.css-text文本：使用text-decoration：line-through添加删除线</p>
+        <p class="underline">4.css-text文本：使用text-decoration: underline添加下划线</p>
+    </div>
+    <br>
+    <div class="border" style="background-color:aquamarine;">
+        <h3>三、这是控制字母的大小写</h3>
+        <p style="text-transform: uppercase;">将小写字符转成大写：uppercase:aaaabbbbccc</p>
+        <p style="text-transform: lowercase;">将大写字母转成小写：lowercase:AAAABBBBCCC</p>
+        <p style="text-transform: capitalize;">将单词的第一个字母大小: hello world: css</p>
+    </div>
+
+</body>
+
+</html>
