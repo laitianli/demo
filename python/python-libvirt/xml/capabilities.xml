@@ -1,0 +1,171 @@
+<capabilities>
+  <host>
+    <uuid>03000200-0400-0500-0006-000700080009</uuid>
+    <cpu>
+      <arch>x86_64</arch>
+      <model>Skylake-Server-IBRS</model>
+      <vendor>Intel</vendor>
+      <microcode version='33554526'/>
+      <counter name='tsc' frequency='1895542000' scaling='yes'/>
+      <topology sockets='1' cores='14' threads='2'/>
+      <feature name='ds'/>
+      <feature name='acpi'/>
+      <feature name='ss'/>
+      <feature name='ht'/>
+      <feature name='tm'/>
+      <feature name='pbe'/>
+      <feature name='dtes64'/>
+      <feature name='monitor'/>
+      <feature name='ds_cpl'/>
+      <feature name='vmx'/>
+      <feature name='smx'/>
+      <feature name='est'/>
+      <feature name='tm2'/>
+      <feature name='xtpr'/>
+      <feature name='pdcm'/>
+      <feature name='dca'/>
+      <feature name='osxsave'/>
+      <feature name='tsc_adjust'/>
+      <feature name='cmt'/>
+      <feature name='clflushopt'/>
+      <feature name='intel-pt'/>
+      <feature name='pku'/>
+      <feature name='md-clear'/>
+      <feature name='stibp'/>
+      <feature name='ssbd'/>
+      <feature name='xsaves'/>
+      <feature name='mbm_total'/>
+      <feature name='mbm_local'/>
+      <feature name='invtsc'/>
+      <pages unit='KiB' size='4'/>
+      <pages unit='KiB' size='1048576'/>
+    </cpu>
+    <power_management>
+      <suspend_mem/>
+      <suspend_disk/>
+      <suspend_hybrid/>
+    </power_management>
+    <iommu support='no'/>
+    <migration_features>
+      <live/>
+      <uri_transports>
+        <uri_transport>tcp</uri_transport>
+        <uri_transport>rdma</uri_transport>
+      </uri_transports>
+    </migration_features>
+    <topology>
+      <cells num='1'>
+        <cell id='0'>
+          <memory unit='KiB'>33213632</memory>
+          <pages unit='KiB' size='4'>6206256</pages>
+          <pages unit='KiB' size='1048576'>8</pages>
+          <distances>
+            <sibling id='0' value='10'/>
+          </distances>
+          <cpus num='28'>
+            <cpu id='0' socket_id='0' core_id='0' siblings='0,14'/>
+            <cpu id='1' socket_id='0' core_id='1' siblings='1,15'/>
+            <cpu id='2' socket_id='0' core_id='2' siblings='2,16'/>
+            <cpu id='3' socket_id='0' core_id='3' siblings='3,17'/>
+            <cpu id='4' socket_id='0' core_id='4' siblings='4,18'/>
+            <cpu id='5' socket_id='0' core_id='5' siblings='5,19'/>
+            <cpu id='6' socket_id='0' core_id='6' siblings='6,20'/>
+            <cpu id='7' socket_id='0' core_id='8' siblings='7,21'/>
+            <cpu id='8' socket_id='0' core_id='9' siblings='8,22'/>
+            <cpu id='9' socket_id='0' core_id='10' siblings='9,23'/>
+            <cpu id='10' socket_id='0' core_id='11' siblings='10,24'/>
+            <cpu id='11' socket_id='0' core_id='12' siblings='11,25'/>
+            <cpu id='12' socket_id='0' core_id='13' siblings='12,26'/>
+            <cpu id='13' socket_id='0' core_id='14' siblings='13,27'/>
+            <cpu id='14' socket_id='0' core_id='0' siblings='0,14'/>
+            <cpu id='15' socket_id='0' core_id='1' siblings='1,15'/>
+            <cpu id='16' socket_id='0' core_id='2' siblings='2,16'/>
+            <cpu id='17' socket_id='0' core_id='3' siblings='3,17'/>
+            <cpu id='18' socket_id='0' core_id='4' siblings='4,18'/>
+            <cpu id='19' socket_id='0' core_id='5' siblings='5,19'/>
+            <cpu id='20' socket_id='0' core_id='6' siblings='6,20'/>
+            <cpu id='21' socket_id='0' core_id='8' siblings='7,21'/>
+            <cpu id='22' socket_id='0' core_id='9' siblings='8,22'/>
+            <cpu id='23' socket_id='0' core_id='10' siblings='9,23'/>
+            <cpu id='24' socket_id='0' core_id='11' siblings='10,24'/>
+            <cpu id='25' socket_id='0' core_id='12' siblings='11,25'/>
+            <cpu id='26' socket_id='0' core_id='13' siblings='12,26'/>
+            <cpu id='27' socket_id='0' core_id='14' siblings='13,27'/>
+          </cpus>
+        </cell>
+      </cells>
+    </topology>
+    <cache>
+      <bank id='0' level='3' type='both' size='19712' unit='KiB' cpus='0-27'/>
+    </cache>
+    <secmodel>
+      <model>none</model>
+      <doi>0</doi>
+    </secmodel>
+    <secmodel>
+      <model>dac</model>
+      <doi>0</doi>
+      <baselabel type='kvm'>+107:+107</baselabel>
+      <baselabel type='qemu'>+107:+107</baselabel>
+    </secmodel>
+  </host>
+
+  <guest>
+    <os_type>hvm</os_type>
+    <arch name='i686'>
+      <wordsize>32</wordsize>
+      <emulator>/usr/libexec/qemu-kvm</emulator>
+      <machine maxCpus='240'>pc-i440fx-rhel7.0.0</machine>
+      <machine canonical='pc-i440fx-rhel7.0.0' maxCpus='240'>pc</machine>
+      <machine maxCpus='240'>rhel6.0.0</machine>
+      <machine maxCpus='240'>rhel6.1.0</machine>
+      <machine maxCpus='240'>rhel6.2.0</machine>
+      <machine maxCpus='240'>rhel6.3.0</machine>
+      <machine maxCpus='240'>rhel6.4.0</machine>
+      <machine maxCpus='240'>rhel6.5.0</machine>
+      <machine maxCpus='240'>rhel6.6.0</machine>
+      <domain type='qemu'/>
+      <domain type='kvm'>
+        <emulator>/usr/libexec/qemu-kvm</emulator>
+      </domain>
+    </arch>
+    <features>
+      <cpuselection/>
+      <deviceboot/>
+      <disksnapshot default='off' toggle='no'/>
+      <acpi default='on' toggle='yes'/>
+      <apic default='on' toggle='no'/>
+      <pae/>
+      <nonpae/>
+    </features>
+  </guest>
+
+  <guest>
+    <os_type>hvm</os_type>
+    <arch name='x86_64'>
+      <wordsize>64</wordsize>
+      <emulator>/usr/libexec/qemu-kvm</emulator>
+      <machine maxCpus='240'>pc-i440fx-rhel7.0.0</machine>
+      <machine canonical='pc-i440fx-rhel7.0.0' maxCpus='240'>pc</machine>
+      <machine maxCpus='240'>rhel6.0.0</machine>
+      <machine maxCpus='240'>rhel6.1.0</machine>
+      <machine maxCpus='240'>rhel6.2.0</machine>
+      <machine maxCpus='240'>rhel6.3.0</machine>
+      <machine maxCpus='240'>rhel6.4.0</machine>
+      <machine maxCpus='240'>rhel6.5.0</machine>
+      <machine maxCpus='240'>rhel6.6.0</machine>
+      <domain type='qemu'/>
+      <domain type='kvm'>
+        <emulator>/usr/libexec/qemu-kvm</emulator>
+      </domain>
+    </arch>
+    <features>
+      <cpuselection/>
+      <deviceboot/>
+      <disksnapshot default='off' toggle='no'/>
+      <acpi default='on' toggle='yes'/>
+      <apic default='on' toggle='no'/>
+    </features>
+  </guest>
+
+</capabilities>
