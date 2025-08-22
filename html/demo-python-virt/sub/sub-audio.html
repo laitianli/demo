@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>声卡控制器设置</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .settings-panel {
+            padding: 20px;
+            background-color: white;
+        }
+        .section-box {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 15px;
+            padding-top: 25px;
+        }
+        .section-title {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 1rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: normal;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            border: 1px solid #d4d4d4;
+            border-radius: 3px;
+            padding: 5px 10px;
+            width: 300px;
+        }
+        .checkbox-group {
+            margin-bottom: 10px;
+        }
+        .form-check-input {
+            margin-right: 8px;
+        }
+        .form-check-label {
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px;
+            border-top: 1px solid #d4d4d4;
+            background-color: #f8f8f8;
+            gap: 10px;
+        }
+        .btn-custom {
+            min-width: 80px;
+        }
+        .info-text {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        .sound-card-options {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-panel">
+            <!-- 设备状态设置框 -->
+            <div class="section-box">
+                <div class="section-title">设备状态</div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="connected">
+                        <label class="form-check-label" for="connected">
+                            已连接(C)
+                        </label>
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="connectAtPowerOn" checked>
+                        <label class="form-check-label" for="connectAtPowerOn">
+                            启动时连接(O)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 连接设置框 -->
+            <div class="section-box">
+                <div class="section-title">连接</div>
+                <div class="radio-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="soundCardType" id="defaultSoundCard">
+                        <label class="form-check-label" for="defaultSoundCard">
+                            使用默认主机声卡(D)
+                        </label>
+                    </div>
+                </div>
+                <div class="radio-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="soundCardType" id="specificSoundCard" checked>
+                        <label class="form-check-label" for="specificSoundCard">
+                            指定主机声卡(S)
+                        </label>
+                        <div class="sound-card-options">
+                            <select class="form-control" id="soundCardSelector">
+                                <option>耳机 (Realtek(R) Audio)</option>
+                                <option>扬声器 (Realtek(R) Audio)</option>
+                                <option>数字音频 (S/PDIF) (Realtek(R) Audio)</option>
+                                <option>麦克风 (Realtek(R) Audio)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 回声抵消设置框 -->
+            <div class="section-box">
+                <div class="section-title">回声抵消</div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="echoCancellation">
+                        <label class="form-check-label" for="echoCancellation">
+                            启用回声抵消(E)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="button-container">
+            <button class="btn btn-outline-secondary btn-custom">添加(A)...</button>
+            <button class="btn btn-outline-secondary btn-custom">移除(R)</button>
+            <button class="btn btn-primary btn-custom">关闭</button>
+            <button class="btn btn-outline-secondary btn-custom">帮助</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 初始化设置
+            $('#specificSoundCard').prop('checked', true);
+            $('#connectAtPowerOn').prop('checked', true);
+            
+            // 可以添加其他交互功能
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USB控制器设置</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .settings-panel {
+            padding: 20px;
+            background-color: white;
+        }
+        .section-box {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 15px;
+            padding-top: 25px;
+        }
+        .section-title {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 1rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: normal;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            border: 1px solid #d4d4d4;
+            border-radius: 3px;
+            padding: 5px 10px;
+            width: 200px;
+        }
+        .checkbox-group {
+            margin-bottom: 10px;
+        }
+        .form-check-input {
+            margin-right: 8px;
+        }
+        .form-check-label {
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px;
+            border-top: 1px solid #d4d4d4;
+            background-color: #f8f8f8;
+            gap: 10px;
+        }
+        .btn-custom {
+            min-width: 80px;
+        }
+        .info-text {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .usb-options {
+            margin-left: 20px;
+        }
+        .usb-compatibility {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        .usb-label {
+            width: 150px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-panel">
+            <!-- 连接设置框 -->
+            <div class="section-box">
+                <div class="section-title">连接</div>
+                <div class="usb-compatibility">
+                    <div class="usb-label">USB 兼容性(C):</div>
+                    <select class="form-control" id="usbCompatibility">
+                        <option>USB 1.1</option>
+                        <option selected>USB 2.0</option>
+                        <option>USB 3.0</option>
+                        <option>USB 3.1</option>
+                    </select>
+                </div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="showAllUsb">
+                        <label class="form-check-label" for="showAllUsb">
+                            显示所有 USB 输入设备(S)
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="button-container">
+            <button class="btn btn-outline-secondary btn-custom">添加(A)...</button>
+            <button class="btn btn-outline-secondary btn-custom">移除(R)</button>
+            <button class="btn btn-primary btn-custom">关闭</button>
+            <button class="btn btn-outline-secondary btn-custom">帮助</button>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 初始化设置
+            $('#usbCompatibility').val('USB 2.0');
+            
+            // 可以添加其他交互功能
+        });
+    </script>
+</body>
+</html>

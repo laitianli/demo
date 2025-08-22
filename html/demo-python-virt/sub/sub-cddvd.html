@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CD/DVD (SATA) 设置</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        .settings-panel {
+            padding: 20px;
+            background-color: white;
+        }
+        .section-box {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 15px;
+            padding-top: 25px;
+        }
+        .section-title {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 1rem;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-label {
+            font-weight: normal;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .form-control {
+            border: 1px solid #d4d4d4;
+            border-radius: 3px;
+            padding: 5px 10px;
+            width: 200px;
+        }
+        .checkbox-group {
+            margin-bottom: 10px;
+        }
+        .form-check-input {
+            margin-right: 8px;
+        }
+        .form-check-label {
+            color: #333;
+        }
+        .button-container {
+            display: flex;
+            justify-content: flex-end;
+            padding: 15px;
+            border-top: 1px solid #d4d4d4;
+            background-color: #f8f8f8;
+            gap: 10px;
+        }
+        .btn-custom {
+            min-width: 80px;
+        }
+        .info-text {
+            color: #666;
+            font-size: 0.85rem;
+            margin-top: 5px;
+        }
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        .drive-options {
+            margin-left: 20px;
+        }
+        .iso-options {
+            margin-left: 20px;
+            display: flex;
+            align-items: center;
+        }
+        .iso-path {
+            margin-left: 10px;
+            color: #666;
+            font-style: italic;
+        }
+        .modal-content {
+            border-radius: 5px;
+        }
+        .modal-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .device-node-options {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="settings-panel">
+            <!-- 设备状态设置框 -->
+            <div class="section-box">
+                <div class="section-title">设备状态</div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="connected">
+                        <label class="form-check-label" for="connected">
+                            已连接(C)
+                        </label>
+                    </div>
+                </div>
+                <div class="checkbox-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="connectAtPowerOn" checked>
+                        <label class="form-check-label" for="connectAtPowerOn">
+                            启动时连接(O)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 连接设置框 -->
+            <div class="section-box">
+                <div class="section-title">连接</div>
+                <div class="radio-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="connectionType" id="physicalDrive" checked>
+                        <label class="form-check-label" for="physicalDrive">
+                            使用物理驱动器(P):
+                        </label>
+                        <div class="drive-options">
+                            <select class="form-control" id="driveSelector">
+                                <option>自动检测</option>
+                                <option>D: DVD驱动器</option>
+                                <option>E: CD驱动器</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="radio-group">
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="connectionType" id="isoImage">
+                        <label class="form-check-label" for="isoImage">
+                            使用ISO映像文件(M):
+                        </label>
+                        <div class="iso-options">
+                            <button class="btn btn-outline-secondary btn-sm" id="browseBtn">浏览(B)...</button>
+                            <span class="iso-path" id="isoPath">未选择</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <button class="btn btn-outline-secondary" id="advancedBtn">高级(V)...</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="button-container">
+            <button class="btn btn-outline-secondary btn-custom">添加(A)...</button>
+            <button class="btn btn-outline-secondary btn-custom">移除(R)</button>
+            <button class="btn btn-primary btn-custom">关闭</button>
+            <button class="btn btn-outline-secondary btn-custom">帮助</button>
+        </div>
+    </div>
+
+    <!-- ISO浏览模态框 -->
+    <div class="modal fade" id="isoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">选择ISO映像文件</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="isoFile" class="form-label">选择ISO文件:</label>
+                        <input type="file" class="form-control" id="isoFile" accept=".iso">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">或从最近使用的文件中选择:</label>
+                        <div class="list-group">
+                            <button type="button" class="list-group-item list-group-item-action">E:\os\ubuntu-20.04.iso</button>
+                            <button type="button" class="list-group-item list-group-item-action">E:\os\windows10.iso</button>
+                            <button type="button" class="list-group-item list-group-item-action">D:\downloads\debian.iso</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="confirmIso">确定</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 高级设置模态框 -->
+    <div class="modal fade" id="advancedModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">CD/DVD高级设置</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="section-box">
+                        <div class="section-title">虚拟设备节点</div>
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deviceNode" id="sataOption" checked>
+                                <label class="form-check-label" for="sataOption">
+                                    SATA(A)
+                                </label>
+                                <div class="device-node-options">
+                                    <select class="form-control" id="sataSelector">
+                                        <option>SATA 0:1 新 CD/DVD (SATA)</option>
+                                        <option>SATA 0:2</option>
+                                        <option>SATA 0:3</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deviceNode" id="scsiOption">
+                                <label class="form-check-label" for="scsiOption">
+                                    SCSI(S)
+                                </label>
+                                <div class="device-node-options">
+                                    <select class="form-control" id="scsiSelector">
+                                        <option>SCSI 0:0 (已预留)</option>
+                                        <option>SCSI 0:1</option>
+                                        <option>SCSI 0:2</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="radio-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="deviceNode" id="ideOption">
+                                <label class="form-check-label" for="ideOption">
+                                    IDE(D)
+                                </label>
+                                <div class="device-node-options">
+                                    <select class="form-control" id="ideSelector">
+                                        <option>IDE 0:0</option>
+                                        <option>IDE 0:1</option>
+                                        <option>IDE 1:0</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="section-box mt-3">
+                        <div class="section-title">故障排除</div>
+                        <div class="checkbox-group">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="legacyEmulation">
+                                <label class="form-check-label" for="legacyEmulation">
+                                    旧版仿真(L)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">确定</button>
+                    <button type="button" class="btn btn-outline-secondary">帮助</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 浏览按钮点击事件
+            $('#browseBtn').click(function() {
+                $('#isoModal').modal('show');
+            });
+            
+            // 高级按钮点击事件
+            $('#advancedBtn').click(function() {
+                $('#advancedModal').modal('show');
+            });
+            
+            // 确认ISO文件选择
+            $('#confirmIso').click(function() {
+                var fileInput = document.getElementById('isoFile');
+                if (fileInput.files.length > 0) {
+                    $('#isoPath').text(fileInput.files[0].name);
+                } else {
+                    $('#isoPath').text('E:\\os\\ubuntu-20.04.iso');
+                }
+                $('#isoModal').modal('hide');
+                $('#isoImage').prop('checked', true);
+            });
+            
+            // 最近文件选择
+            $('.list-group-item').click(function() {
+                $('#isoPath').text($(this).text());
+                $('#isoModal').modal('hide');
+                $('#isoImage').prop('checked', true);
+            });
+            
+            // 文件输入变化
+            $('#isoFile').change(function() {
+                if (this.files.length > 0) {
+                    $('#isoPath').text(this.files[0].name);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
