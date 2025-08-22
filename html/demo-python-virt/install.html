@@ -522,10 +522,14 @@
 
         <!-- 底部四个按钮 -->
         <div class="button-container">
-            <button class="btn btn-outline-secondary btn-custom">添加(A)...</button>
-            <button class="btn btn-outline-secondary btn-custom">移除</button>
-            <button class="btn btn-primary btn-custom">关闭</button>
-            <button class="btn btn-outline-secondary btn-custom">帮助</button>
+            <div class="left-buttons">
+                <button class="btn btn-outline-secondary btn-custom" id="addHardwareBtn">添加(A)...</button>
+                <button class="btn btn-outline-secondary btn-custom">移除</button>
+            </div>
+            <div class="right-buttons">
+                <button class="btn btn-primary btn-custom">关闭</button>
+                <button class="btn btn-outline-secondary btn-custom">帮助</button>
+            </div>
         </div>
     </div>
 
@@ -756,6 +760,75 @@
             </div>
         </div>
     </div>
+    <!-- 添加硬件向导模态框 -->
+    <div class="modal fade" id="hardwareWizardModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加硬件向导</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您要安装哪类硬件?</p>
+
+                    <div class="hardware-layout">
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">硬件类型(H):</label>
+                            <div class="hardware-types">
+                                <div class="hardware-item" data-type="cdrom">
+                                    <div class="hardware-icon"></div>
+                                    CD/DVD 驱动器
+                                </div>
+                                <div class="hardware-item" data-type="floppy">
+                                    <div class="hardware-icon"></div>
+                                    软盘驱动器
+                                </div>
+                                <div class="hardware-item selected" data-type="network">
+                                    <div class="hardware-icon"></div>
+                                    网络适配器
+                                </div>
+                                <div class="hardware-item" data-type="usb">
+                                    <div class="hardware-icon"></div>
+                                    USB 控制器
+                                </div>
+                                <div class="hardware-item" data-type="sound">
+                                    <div class="hardware-icon"></div>
+                                    声卡
+                                </div>
+                                <div class="hardware-item" data-type="parallel">
+                                    <div class="hardware-icon"></div>
+                                    并行端口
+                                </div>
+                                <div class="hardware-item" data-type="serial">
+                                    <div class="hardware-icon"></div>
+                                    串行端口
+                                </div>
+                                <div class="hardware-item" data-type="scsi">
+                                    <div class="hardware-icon"></div>
+                                    通用 SCSI 设备
+                                </div>
+                                <div class="hardware-item" data-type="tpm">
+                                    <div class="hardware-icon"></div>
+                                    可信平台模块
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">解释:</label>
+                            <div class="explanation-box">
+                                <div id="hardwareExplanation">添加网络适配器。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">完成</button>
+                </div>
+            </div>
+        </div>
+    </div>
     <script>
         $(document).ready(function () {
             // 【左边框】设备选择切换
@@ -933,9 +1006,9 @@
             $('#monitorCount').val('1');
             $('#maxResolution').val('2560 x 1600');
             $('#graphicsMemory').val('8 GB (推荐)');
-            
+
             // 当选择"指定监视器设置"时启用下拉框
-            $('input[name="monitorSetting"]').change(function() {
+            $('input[name="monitorSetting"]').change(function () {
                 if ($('#specifyMonitorSetting').is(':checked')) {
                     $('#monitorCount').prop('disabled', false);
                     $('#maxResolution').prop('disabled', false);
@@ -944,20 +1017,52 @@
                     $('#maxResolution').prop('disabled', true);
                 }
             });
-            
+
             // 当选择"拉伸模式"时启用单选框
-            $('#stretchMode').change(function() {
+            $('#stretchMode').change(function () {
                 if ($(this).is(':checked')) {
                     $('input[name="stretchOption"]').prop('disabled', false);
                 } else {
                     $('input[name="stretchOption"]').prop('disabled', true);
                 }
             });
-            
+
             // 初始化禁用状态
             $('#monitorCount').prop('disabled', true);
             $('#maxResolution').prop('disabled', true);
             $('input[name="stretchOption"]').prop('disabled', true);
+
+            //添加硬件按钮
+                        // 添加硬件按钮点击事件
+            $('#addHardwareBtn').click(function() {
+                $('#hardwareWizardModal').modal('show');
+            });
+            
+            // 硬件类型选择
+            $('.hardware-item').click(function() {
+                $('.hardware-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                var hardwareType = $(this).data('type');
+                updateHardwareExplanation(hardwareType);
+            });
+            
+            function updateHardwareExplanation(type) {
+                var explanations = {
+                    'cdrom': '添加CD/DVD驱动器。',
+                    'floppy': '添加软盘驱动器。',
+                    'network': '添加网络适配器。',
+                    'usb': '添加USB控制器。',
+                    'sound': '添加声卡。',
+                    'parallel': '添加并行端口。',
+                    'serial': '添加串行端口。',
+                    'scsi': '添加通用SCSI设备。',
+                    'tpm': '添加可信平台模块。'
+                };
+                
+                $('#hardwareExplanation').text(explanations[type] || '');
+            }
+
         });
     </script>
 </body>

@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟机硬件设置</title>
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script src="../js/bootstrap.bundle.min.js"></script>    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .device-list {
+            border-right: 1px solid #d4d4d4;
+            padding: 0;
+            background-color: #f8f8f8;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .device-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .device-item:hover {
+            background-color: #e9e9e9;
+        }
+        .device-item.active {
+            background-color: #e1ecf4;
+            border-right: 3px solid #317ab9;
+        }
+        .settings-panel {
+            padding: 20px;
+            background-color: white;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-weight: bold;
+            color: #444;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .device-summary {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-top: 1px solid #d4d4d4;
+            background-color: #f8f8f8;
+        }
+        .left-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-custom {
+            min-width: 80px;
+        }
+        .modal-content {
+            border-radius: 5px;
+        }
+        .modal-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .hardware-types {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            height: 250px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .hardware-item {
+            padding: 8px 5px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .hardware-item:hover {
+            background-color: #f0f0f0;
+        }
+        .hardware-item.selected {
+            background-color: #e1ecf4;
+        }
+        .hardware-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background-color: #317ab9;
+            border-radius: 2px;
+        }
+        .explanation-box {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            height: 250px;
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        .hardware-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .hardware-section {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="section-title">硬件</div>
+        <div class="row g-0">
+            <!-- 左侧设备列表 -->
+            <div class="col-md-4 device-list">
+                <div class="device-item active" data-device="memory">
+                    <div class="fw-bold">内存</div>
+                    <div class="device-summary">4GB</div>
+                </div>
+                <div class="device-item" data-device="processor">
+                    <div class="fw-bold">处理器</div>
+                    <div class="device-summary">2</div>
+                </div>
+                <div class="device-item" data-device="cdrom">
+                    <div class="fw-bold">新CD/DVD(SATA)</div>
+                    <div class="device-summary">正在使用文件 E:\os\ubuntu-...</div>
+                </div>
+                <div class="device-item" data-device="network">
+                    <div class="fw-bold">网络适配器</div>
+                    <div class="device-summary">NAT</div>
+                </div>
+                <div class="device-item" data-device="usb">
+                    <div class="fw-bold">USB控制器</div>
+                    <div class="device-summary">存在</div>
+                </div>
+                <div class="device-item" data-device="sound">
+                    <div class="fw-bold">声卡</div>
+                    <div class="device-summary">自动检测</div>
+                </div>
+                <div class="device-item" data-device="display">
+                    <div class="fw-bold">显示</div>
+                    <div class="device-summary">自动检测</div>
+                </div>
+            </div>
+            
+            <!-- 右侧设置面板 -->
+            <div class="col-md-8 settings-panel">
+                <!-- 内存设置面板 -->
+                <div class="device-settings" id="memory-settings">
+                    <h4>内存</h4>
+                    <p class="info-text">指定分配给此虚拟机的内存量。内存大小必须为4MB的倍数。</p>
+                    
+                    <div class="mb-3">
+                        <label for="memorySize" class="form-label">此虚拟机的内存(M):</label>
+                        <div class="memory-control">
+                            <div class="memory-input-container">
+                                <input type="number" class="form-control memory-input" id="memorySize" value="4096" min="4" step="4">
+                                <div class="memory-buttons">
+                                    <button class="btn btn-sm btn-outline-secondary memory-btn" id="memoryUp">▲</button>
+                                    <button class="btn btn-sm btn-outline-secondary memory-btn" id="memoryDown">▼</button>
+                                </div>
+                            </div>
+                            <span style="margin: 0 10px;">MB</span>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="memorySlider" min="4" max="131072" value="4096" step="4">
+                                <div class="memory-labels">
+                                    <span class="memory-label">4MB</span>
+                                    <span class="memory-label">128GB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="memory-options">
+                        <div class="memory-option" data-value="131072">128GB</div>
+                        <div class="memory-option" data-value="65536">64GB</div>
+                        <div class="memory-option" data-value="32768">32GB</div>
+                        <div class="memory-option" data-value="16384">16GB</div>
+                        <div class="memory-option" data-value="8192">8GB</div>
+                        <div class="memory-option selected" data-value="4096">4GB</div>
+                        <div class="memory-option" data-value="2048">2GB</div>
+                        <div class="memory-option" data-value="1024">1GB</div>
+                        <div class="memory-option" data-value="512">512MB</div>
+                        <div class="memory-option" data-value="256">256MB</div>
+                        <div class="memory-option" data-value="128">128MB</div>
+                        <div class="memory-option" data-value="64">64MB</div>
+                    </div>
+                    
+                    <div class="memory-info">
+                        <div class="memory-info-box">
+                            <div class="info-text">最大建议内存</div>
+                            <div class="info-text">(超出此大小可能发生内存交换。)</div>
+                            <div class="memory-value max-memory">15.6GB</div>
+                            <div class="arrow max-memory">↑</div>
+                        </div>
+                        <div class="memory-info-box">
+                            <div class="info-text">建议内存</div>
+                            <div class="memory-value recommended-memory">4GB</div>
+                            <div class="arrow recommended-memory">↑</div>
+                        </div>
+                        <div class="memory-info-box">
+                            <div class="info-text">建议的最小客户机操作系统内存</div>
+                            <div class="memory-value min-memory">2GB</div>
+                            <div class="arrow min-memory">↑</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 其他设备设置面板（默认隐藏） -->
+                <div class="device-settings d-none" id="processor-settings">
+                    <h4>处理器设置</h4>
+                    <p class="info-text">处理器设置内容将在这里显示</p>
+                </div>
+                
+                <div class="device-settings d-none" id="cdrom-settings">
+                    <h4>CD/DVD 驱动器设置</h4>
+                    <p class="info-text">CD/DVD 驱动器设置内容将在这里显示</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="button-container">
+            <div class="left-buttons">
+                <button class="btn btn-outline-secondary btn-custom" id="addHardwareBtn">添加(A)...</button>
+                <button class="btn btn-outline-secondary btn-custom">移除(R)</button>
+            </div>
+            <div class="right-buttons">
+                <button class="btn btn-primary btn-custom">关闭</button>
+                <button class="btn btn-outline-secondary btn-custom">帮助</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加硬件向导模态框 -->
+    <div class="modal fade" id="hardwareWizardModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加硬件向导</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您要安装哪类硬件?</p>
+                    
+                    <div class="hardware-layout">
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">硬件类型(H):</label>
+                            <div class="hardware-types">
+                                <div class="hardware-item" data-type="cdrom">
+                                    <div class="hardware-icon"></div>
+                                    CD/DVD 驱动器
+                                </div>
+                                <div class="hardware-item" data-type="floppy">
+                                    <div class="hardware-icon"></div>
+                                    软盘驱动器
+                                </div>
+                                <div class="hardware-item selected" data-type="network">
+                                    <div class="hardware-icon"></div>
+                                    网络适配器
+                                </div>
+                                <div class="hardware-item" data-type="usb">
+                                    <div class="hardware-icon"></div>
+                                    USB 控制器
+                                </div>
+                                <div class="hardware-item" data-type="sound">
+                                    <div class="hardware-icon"></div>
+                                    声卡
+                                </div>
+                                <div class="hardware-item" data-type="parallel">
+                                    <div class="hardware-icon"></div>
+                                    并行端口
+                                </div>
+                                <div class="hardware-item" data-type="serial">
+                                    <div class="hardware-icon"></div>
+                                    串行端口
+                                </div>
+                                <div class="hardware-item" data-type="scsi">
+                                    <div class="hardware-icon"></div>
+                                    通用 SCSI 设备
+                                </div>
+                                <div class="hardware-item" data-type="tpm">
+                                    <div class="hardware-icon"></div>
+                                    可信平台模块
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">解释</label>
+                            <div class="explanation-box">
+                                <div id="hardwareExplanation">添加网络适配器。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary">完成</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 设备选择切换
+            $('.device-item').click(function() {
+                $('.device-item').removeClass('active');
+                $(this).addClass('active');
+                
+                var device = $(this).data('device');
+                $('.device-settings').addClass('d-none');
+                $('#' + device + '-settings').removeClass('d-none');
+            });
+            
+            // 内存选项点击
+            $('.memory-option').click(function() {
+                $('.memory-option').removeClass('selected');
+                $(this).addClass('selected');
+                
+                var memoryValue = $(this).data('value');
+                $('#memorySize').val(memoryValue);
+                $('#memorySlider').val(memoryValue);
+            });
+            
+            // 滑块和输入框同步
+            $('#memorySlider').on('input', function() {
+                $('#memorySize').val($(this).val());
+                updateMemorySelection($(this).val());
+            });
+            
+            $('#memorySize').on('input', function() {
+                var value = $(this).val();
+                $('#memorySlider').val(value);
+                updateMemorySelection(value);
+            });
+            
+            // 上下按钮控制
+            $('#memoryUp').click(function() {
+                var currentValue = parseInt($('#memorySize').val());
+                $('#memorySize').val(currentValue + 4);
+                $('#memorySlider').val(currentValue + 4);
+                updateMemorySelection(currentValue + 4);
+            });
+            
+            $('#memoryDown').click(function() {
+                var currentValue = parseInt($('#memorySize').val());
+                if (currentValue > 4) {
+                    $('#memorySize').val(currentValue - 4);
+                    $('#memorySlider').val(currentValue - 4);
+                    updateMemorySelection(currentValue - 4);
+                }
+            });
+            
+            // 添加硬件按钮点击事件
+            $('#addHardwareBtn').click(function() {
+                $('#hardwareWizardModal').modal('show');
+            });
+            
+            // 硬件类型选择
+            $('.hardware-item').click(function() {
+                $('.hardware-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                var hardwareType = $(this).data('type');
+                updateHardwareExplanation(hardwareType);
+            });
+            
+            function updateHardwareExplanation(type) {
+                var explanations = {
+                    'cdrom': '添加CD/DVD驱动器。',
+                    'floppy': '添加软盘驱动器。',
+                    'network': '添加网络适配器。',
+                    'usb': '添加USB控制器。',
+                    'sound': '添加声卡。',
+                    'parallel': '添加并行端口。',
+                    'serial': '添加串行端口。',
+                    'scsi': '添加通用SCSI设备。',
+                    'tpm': '添加可信平台模块。'
+                };
+                
+                $('#hardwareExplanation').text(explanations[type] || '');
+            }
+            
+            function updateMemorySelection(value) {
+                $('.memory-option').removeClass('selected');
+                
+                $('.memory-option').each(function() {
+                    if ($(this).data('value') == value) {
+                        $(this).addClass('selected');
+                    }
+                });
+            }
+            
+            // 初始选择4GB
+            $('.memory-option[data-value="4096"]').addClass('selected');
+            
+            // 初始选择网络适配器
+            $('.hardware-item[data-type="network"]').addClass('selected');
+            updateHardwareExplanation('network');
+        });
+    </script>
+</body>
+</html>
