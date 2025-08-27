@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟机硬件设置</title>
+    <link href="./css/bootstrap.min.css" rel="stylesheet">
+    <script src="./js/jquery-3.6.0.min.js"></script>
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <style>
+        body {
+            background-color: #f0f0f0;
+            padding: 20px;
+            font-family: "Microsoft YaHei", sans-serif;
+        }
+        .settings-container {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+            overflow: hidden;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .device-list {
+            border-right: 1px solid #d4d4d4;
+            padding: 0;
+            background-color: #f极f8f8;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .device-item {
+            padding: 12px 15px;
+            border-bottom: 1px solid #e5e5e5;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .device-item:hover {
+            background-color: #e9e9e9;
+        }
+        .device-item.active {
+            background-color: #e1ecf4;
+            border-right: 3px solid #317ab9;
+        }
+        .settings-panel {
+            padding: 20px;
+            background-color: white;
+            height: 400px;
+            overflow-y: auto;
+        }
+        .section-title {
+            font-weight: bold;
+            color: #444;
+            padding: 10px 15px;
+            background-color: #f0f0f0;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .device-summary {
+            font-size: 0.85rem;
+            color: #666;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+            border-top: 1px solid #d4d4d4;
+            background-color: #f8f8f8;
+        }
+        .left-b极uttons {
+            display: flex;
+            gap: 10px;
+        }
+        .right-buttons {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-custom {
+            min-width: 80px;
+        }
+        .modal-content {
+            border-radius: 5px;
+        }
+        .modal-header {
+            background-color: #f8f8f8;
+            border-bottom: 1px solid #d4d4d4;
+        }
+        .hardware-types {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            height: 250px;
+            overflow-y: auto;
+            padding: 5px;
+        }
+        .hardware-item {
+            padding: 8px 5px;
+            cursor: pointer;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            align-items: center;
+        }
+        .hardware-item:hover {
+            background-color: #f0f0f0;
+        }
+        .hardware-item.selected {
+            background-color: #316ac5;
+            color: white;
+        }
+        .hardware-icon {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            background-color: #317ab9;
+            border-radius: 2px;
+        }
+        .explanation-box {
+            border: 极px solid #d4d4d4;
+            border-radius: 4px;
+            height: 250px;
+            padding: 10px;
+            background-color: #f8f8f8;
+        }
+        .hardware-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .hardware-section {
+            margin-bottom: 5px;
+        }
+        .section-box {
+            border: 1px solid #d4d4d4;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            position: relative;
+            padding: 15px;
+            padding-top: 25px;
+        }
+        .section-title-inner {
+            position: absolute;
+            top: -10px;
+            left: 15px;
+            background-color: white;
+            padding: 0 10px;
+            font-weight: bold;
+            color: #444;
+            font-size: 1rem;
+        }
+        .checkbox-group {
+            margin-bottom: 10px;
+        }
+        .form-check-input {
+            margin-right: 8px;
+        }
+        .form-check-label {
+            color: #333;
+        }
+        .radio-group {
+            margin-bottom: 10px;
+        }
+        .network-options {
+            margin-left: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="settings-container">
+        <div class="section-title">硬件</div>
+        <div class="row g-0">
+            <!-- 左侧设备列表 -->
+            <div class="col-md-4 device-list" id="deviceList">
+                <div class="device-item active" data-device="memory">
+                    <div class="fw-bold">内存</div>
+                    <div class="device-summary">4GB</div>
+                </div>
+                <div class="device-item" data-device="processor">
+                    <div class="fw-bold">处理器</div>
+                    <极iv class="device-summary">2</div>
+                </div>
+                <div class="device-item" data-device="cdrom">
+                    <div class="fw-bold">新CD/DVD(SATA)</div>
+                    <div class="device-summary">正在使用文件 E:\os\ubuntu-...</div>
+                </div>
+            </div>
+            
+            <!-- 右侧设置面板 -->
+            <div class="col-md-8 settings-panel" id="settingsPanel">
+                <!-- 内存设置面板 -->
+                <div class="device-settings" id="memory-settings">
+                    <h4>内存</h4>
+                    <p class="info-text">指定分配给此虚拟机的内存量。内存大小必须为4MB的倍数。</p>
+                    
+                    <div class="mb-3">
+                        <label for="memorySize" class="form-label">此虚拟机的内存(M):</label>
+                        <div class="memory-control">
+                            <div class="memory-input-container">
+                                <input type="number" class="form-control memory-input" id="memorySize" value="4096" min="4" step="4">
+                                <div class="memory-buttons">
+                                    <button class="btn btn-sm btn-outline-secondary memory-btn" id="memoryUp">▲</button>
+                                    <button class="btn btn-sm btn-outline-secondary memory-btn" id="memoryDown">▼</button>
+                                </div>
+                            </div>
+                            <span style="margin: 0 10px;">MB</span>
+                            <div class="slider-container">
+                                <input type="range" class="slider" id="memorySlider" min="4" max="131072" value="4096" step="4">
+                                <div class="memory-labels">
+                                    <span class="memory-label">4MB</span>
+                                    <span class="memory-label">128GB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="memory-options">
+                        <div class="memory-option" data-value="131072">128GB</div>
+                        <div class="memory-option" data-value="65536">64GB</div>
+                        <div class="memory-option" data-value="32768">32GB</div>
+                        <div class="memory-option" data-value="16384">16GB</div>
+                        <div class="memory-option" data-value="8192">8GB</div>
+                        <div class="memory-option selected" data-value="4096">极GB</div>
+                        <div class="memory-option" data-value="2048">2GB</div>
+                        <div class="memory-option" data-value="1024">1GB</div>
+                        <div class="memory-option" data-value="512">512MB</div>
+                        <div class="memory-option" data-value="256">256MB</div>
+                        <div class="memory-option" data-value="128">128MB</div>
+                        <div class="memory-option" data-value="64">64MB</div>
+                    </div>
+                </div>
+                
+                <!-- 其他设备设置面板（默认隐藏） -->
+                <div class="device-settings d-none" id="processor-settings">
+                    <h4>处理器设置</h4>
+                    <p class="info-text">处理器设置内容将在这里显示</p>
+                </div>
+                
+                <div class="device-settings d-none" id="cdrom-settings">
+                    <h4>CD/DVD 驱动器设置</h4>
+                    <p class="info-text">CD/DVD 驱动器设置内容将在这里显示</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 底部按钮 -->
+        <div class="button-container">
+            <div class="left-buttons">
+                <button class="btn btn-outline-secondary btn-custom" id="addHardwareBtn">添加(A)...</button>
+                <button class="btn btn-outline-secondary btn-custom" id="removeHardwareBtn">移除(R)</button>
+            </div>
+            <div class="right-buttons">
+                <button class="btn btn-primary btn-custom">关闭</button>
+                <button class="btn btn-outline-secondary btn-custom">帮助</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 添加硬件向导模态框 -->
+    <div class="modal fade" id="hardwareWizardModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">添加硬件向导</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>您要安装哪类硬件?</p>
+                    
+                    <div class="hardware-layout">
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">硬件类型(H):</label>
+                            <div class="hardware-types">
+                                <div class="hardware-item" data-type="cdrom">
+                                    <div class="hardware-icon"></div>
+                                    CD/DVD 驱动器
+                                </div>
+                                <div class="hardware-item" data-type="floppy">
+                                    <div class="hardware-icon"></div>
+                                    软盘驱动器
+                                </div>
+                                <div class="hardware-item selected" data-type="network">
+                                    <div class="hardware-icon"></div>
+                                    网络适配器
+                                </div>
+                                <div class="hardware-item" data-type="usb">
+                                    <div class="hardware-icon"></div>
+                                    USB 控制器
+                                </div>
+                                <div class="hardware-item" data-type="sound">
+                                    <div class="hardware-icon"></div>
+                                    声卡
+                                </div>
+                                <div class="hardware-item" data-type="parallel">
+                                    <div class="hardware-icon"></div>
+                                    并行端口
+                                </div>
+                                <div class="hardware-item" data-type="serial">
+                                    <div class="hardware-icon"></div>
+                                    串行端口
+                                </div>
+                                <div class="hardware-item" data-type="scsi">
+                                    <div class="hardware-icon"></div>
+                                    通用 SCSI 设备
+                                </div>
+                                <div class="hardware-item极" data-type="tpm">
+                                    <div class="hardware-icon"></div>
+                                    可信平台模块
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="hardware-section">
+                            <label class="form-label fw-bold">解释</label>
+                            <div class="explanation-box">
+                                <div id="hardwareExplanation">添加网络适配器。</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="finishBtn">完成</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        $(document).ready(function() {
+            // 设备选择切换
+            $('.device-item').click(function() {
+                $('.device-item').removeClass('active');
+                $(this).addClass('active');
+                
+                var device = $(this).data('device');
+                $('.device-settings').addClass('d-none');
+                $('#' + device + '-settings').removeClass('d-none');
+            });
+            
+            // 添加硬件按钮点击事件
+            $('#addHardwareBtn').click(function() {
+                $('#hardwareWizardModal').modal('show');
+            });
+            
+            // 硬件类型选择
+            $('.hardware-item').click(function() {
+                $('.hardware-item').removeClass('selected');
+                $(this).addClass('selected');
+                
+                var hardwareType = $(this).data('type');
+                updateHardwareExplanation(hardwareType);
+            });
+            
+            // 完成按钮点击事件
+            $('#finishBtn').click(function() {
+                var selectedHardware = $('.hardware-item.selected').data('type');
+                addNewHardware(selectedHardware);
+                $('#hardwareWizardModal').modal('hide');
+            });
+            
+            // 移除按钮点击事件
+            $('#removeHardwareBtn').click(function() {
+                var activeItem = $('.device-item.active');
+                if (activeItem.data('device') !== 'memory' && 
+                    activeItem.data('device') !== 'processor' && 
+                    activeItem.data('device') !== 'cdrom') {
+                    activeItem.remove();
+                    $('#' + activeItem.data('device') + '-settings').remove();
+                    $('.device-item:first').click();
+                } else {
+                    alert('系统默认硬件不能移除！');
+                }
+            });
+            
+            function updateHardwareExplanation(type) {
+                var explanations = {
+                    'cdrom': '添加CD/DVD驱动器。',
+                    'floppy': '添加软盘驱动器。',
+                    'network': '添加网络适配器。',
+                    'usb': '添加USB控制器。',
+                    'sound': '添加声卡。',
+                    'parallel': '添加并行端口。',
+                    'serial': '添加串行端口。',
+                    'scsi': '添加通用SCSI设备。',
+                    'tpm': '添加可信平台模块。'
+                };
+                
+                $('#hardwareExplanation').text(explanations[type] || '');
+            }
+            
+            function addNewHardware(type) {
+                // 生成唯一ID
+                var newId = type + '-' + new Date().getTime();
+                
+                // 在左侧设备列表添加新项目
+                var deviceHtml = '';
+                var settingsHtml = '';
+                
+                switch(type) {
+                    case 'network':
+                        deviceHtml = `<div class="device-item" data-device="${newId}">
+                            <div class="fw-bold">网络适配器</div>
+                            <div class="device-summary">NAT</div>
+                        </div>`;
+                        
+                        settingsHtml = `<div class="device-settings d-none" id="${newId}-settings">
+                            <h4>网络适配器</h4>
+                            <div class="section-box">
+                                <div class="section-title-inner">设备状态</div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="connected-${newId}">
+                                        <label class="form-check-label" for="connected-${newId}">
+                                            已连接(C)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="connectAtPowerOn-${newId}" checked>
+                                        <label class="form-check-label" for="connectAtPowerOn-${newId}">
+                                            启动时连接(O)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="section-box">
+                                <div class="section-title-inner">网络连接</div>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="networkType-${newId}" id="bridgedMode-${newId}">
+                                        <label class="form-check-label" for="bridgedMode-${newId}">
+                                            桥接模式(B):直接连接物理网络
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="networkType-${newId}" id="natMode-${newId}" checked>
+                                        <label class="form-check-label极 for="natMode-${newId}">
+                                            NAT 模式(N):用于共享主机的IP地址
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="networkType-${newId}" id="hostOnlyMode-${newId}">
+                                        <label class="form-check-label" for="hostOnlyMode-${newId}">
+                                            仅主机模式(H):与主机共享的专用网络
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                        break;
+                        
+                    case 'usb':
+                        deviceHtml = `<div class="device-item" data-device="${newId}">
+                            <div class="fw-bold">USB控制器</div>
+                            <div class="device-summary">存在</div>
+                        </div>`;
+                        
+                        settingsHtml = `<div class="device-settings d-none" id="${newId}-settings">
+                            <h4>USB控制器</h4>
+                            <div class="section-box">
+                                <div class="section-title-inner">连接</div>
+                                <div class="form-group">
+                                    <label class="form-label">USB 兼容性(C):</label>
+                                    <select class="form-control" id="usbCompatibility-${newId}">
+                                        <option>USB 1.1</option>
+                                        <option selected>USB 2.0</option>
+                                        <option>USB 3.0</option>
+                                        <option>USB 3.1</option>
+                                    </select>
+                                </div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="showAllUsb-${newId}">
+                                        <label class="form-check-label" for="showAllUsb-${newId}">
+                                            显示所有 USB 输入设备(S)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                        break;
+                        
+                    case 'sound':
+                        deviceHtml = `<div class="device-item" data-device="${newId}">
+                            <div class="fw-bold">声卡</div>
+                            <div class="device-summary">自动检测</div>
+                        </div>`;
+                        
+                        settingsHtml = `<div class="device-settings d-none" id="${newId}-settings">
+                            <h4>声卡</h4>
+                            <div class="section-box">
+                                <div class="section-title-inner">设备状态</div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="connected-${newId}">
+                                        <label class极="form-check-label" for="connected-${newId}">
+                                            已连接(C)
+                                        </极abel>
+                                    </div>
+                                </div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="connectAtPowerOn-${newId}" checked>
+                                        <label class="form-check-label" for="connect极AtPowerOn-${newId}">
+                                            启动时连接(O)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="section-box">
+                                <div class="section-title-inner">连接</div>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="soundCardType-${newId}" id="defaultSoundCard-${newId}">
+                                        <label class="form-check-label" for="defaultSoundCard-${newId}">
+                                            使用默认主机声卡(D)
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="radio-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="soundCardType-${newId}" id="specificSoundCard-${newId}" checked>
+                                        <label class="form-check-label" for="specificSoundCard-${newId}">
+                                            指定主机声卡(S)
+                                        </label>
+                                        <div class="sound-card-options">
+                                            <select class="form-control" id="soundCardSelector-${newId}">
+                                                <option>耳机 (Realtek(R) Audio)</option>
+                                                <option>扬声器 (Realtek(R) Audio)</option>
+                                                <option>数字音频 (S/PDIF) (Realtek(R) Audio)</option>
+                                                <option>麦克风 (Realtek(R) Audio)</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="section-box">
+                                <div class="section-title-inner">回声抵消</div>
+                                <div class="checkbox-group">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" id="echoCancellation-${newId}">
+                                        <label class="form-check-label" for="echoCancellation-${newId}">
+                                            启用回声抵消(E)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>`;
+                        break;
+                        
+                    default:
+                        deviceHtml = `<div class="device-item" data-device="${newId}">
+                            <div class="fw-bold">${type}</div>
+                            <div class="device-summary">已添加</div>
+                        </div>`;
+                        
+                        settingsHtml = `<div class="device-settings d-none" id="${newId}-settings">
+                            <h4>${type}设置</h4>
+                            <p class="info-text">${type}设置内容将在这里显示</p>
+                        </div>`;
+                }
+                
+                // 添加到左侧设备列表
+                $('#deviceList').append(deviceHtml);
+                
+                // 添加到右侧设置面板
+                $('#settingsPanel').append(settingsHtml);
+                
+                // 绑定新设备的点击事件
+                $(`.device-item[data-device="${newId}"]`).click(function() {
+                    $('.device-item').removeClass('active');
+                    $(this).addClass('active');
+                    
+                    var device = $(this).data('device');
+                    $('.device-settings').addClass('d-none');
+                    $('#' + device + '-settings').removeClass('d-none');
+                });
+                
+                // 选中新添加的设备
+                $(`.device-item[data-device="${newId}"]`).click();
+            }
+            
+            // 初始选择网络适配器
+            $('.hardware-item[data-type="network"]').addClass('selected');
+            updateHardwareExplanation('network');
+        });
+    </script>
+</body>
+</html>
