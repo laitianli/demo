@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo2 jQuery</title>
+    <script src="js/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <div>这是第一个div对象</div>
+    <div>这是第二个div对象</div>
+    <div>这是第三个div对象</div>
+    <ul>
+        <li>相同操作</li>
+        <li>相同操作</li>
+        <li>相同操作</li>
+    </ul>
+
+    <script>
+        console.log($('div'))
+        // 隐式迭代：把所有匹配元素内部进行遍历循环，给每个div元素的css背景颜色都修改
+        $('div').css('background', 'pink')
+        $('li').css('color', 'red');
+    </script>
+</body>
+</html>

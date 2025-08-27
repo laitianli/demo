@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="../../bootstrap-5.3.0-alpha1/dist/css/bootstrap.min.css">
+</head>
+
+<body>
+    <form action="" class="w-75 mx-auto mt-5">
+        <div class="mb-3 row">
+            <label for="username" class="col-md-3 text-end form-lable col-form-label">用户名：</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="username">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="password" class="col-md-3 text-end form-label col-form-label">密码：</label>
+            <div class="col-md-9">
+                <input type="password" class="form-control" id="password">
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-md-3 text-end form-label col-form-label ">性别：</label>
+            <div class="col-md-9">
+                <div class="form-check  form-label col-form-label form-check-inline">
+                    <label for="">男</label>
+                    <input type="radio" class="form-check-input" name="sex" id="man" checked>
+                </div>
+                <div class="form-check form-label col-form-label form-check-inline">
+                    <label for="">女</label>
+                    <input type="radio" class="form-check-input" name="sex" id="woman">
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-form-label col-md-3 text-end">爱好：</label>
+            <div class="col-md-9">
+                <div class="form-check col-form-label form-check-inline">
+                    <label for="" class="form-check-label">爬山</label>
+                    <input type="checkbox" class="form-check-input" name="fav" id="ps" checked>
+                </div>
+                <div class="form-check colo-form-lable form-check-inline">
+                    <label for="" class="form-check-label">游泳</label>
+                    <input type="checkbox" class="form-check-input" name="fav" id="yy" checked>
+                </div>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-md-3 text-end col-form-label">邮箱：</label>
+            <div class="col-md-9">
+                <input type="text" value="88888888@qq.com" class="form-control-plaintext" readonly disabled>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-md-3 text-end col-form-label">居住城市：</label>
+            <div class="col-md-5">
+                <select name="" id="" class="form-select">
+                    <option value="">北京</option>
+                    <option value="">上海</option>
+                    <option value="">杭州</option>
+                    <option value="" selected>深圳</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-md-3 text-end col-form-label">留言：</label>
+            <div class="col-md-9">
+                <textarea name="" id="" class="form-control" rows="5"></textarea>
+            </div>
+        </div>
+
+        <div class="mb-3 row">
+            <label for="" class="col-md-3 text-end col-form-label">主题颜色：</label>
+            <div class="col-md-9">
+                <input type="color" class="form-control-color">
+            </div>
+        </div>
+    </form>
+</body>
+
+</html>

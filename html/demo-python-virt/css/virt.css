@@ -17,8 +17,8 @@ body {
     border-right: 1px solid #d4d4d4;
     padding: 0;
     background-color: #f8f8f8;
-    height: 450px;
-    overflow-y: auto;
+    /* height: 450px;
+    overflow-y: auto; */
 }
 
 .device-item {

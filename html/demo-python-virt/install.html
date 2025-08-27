@@ -19,7 +19,7 @@
         <div class="section-title hard-title">硬件</div>
         <div class="row g-0">
             <!-- 左侧设备列表 -->
-            <div class="col-md-4 device-list">
+            <div class="col-md-4 device-list  overflow-y-scroll">
                 <div class="device-item active" data-device="memory">
                     <div class="fw-bold">内存</div>
                     <div class="device-summary">4GB</div>
@@ -830,7 +830,15 @@
         </div>
     </div>
     <script>
-        $(document).ready(function () {
+        //jquery代码入口1
+        // $(function(){ 
+
+        // })
+        /**/
+        // jQuery(function(){
+
+        // })
+        $(document).ready(function () { //jquery代码入口2：页面加载完成后执行的js代码
             // 【左边框】设备选择切换
             $('.device-item').click(function () {
                 $('.device-item').removeClass('active');

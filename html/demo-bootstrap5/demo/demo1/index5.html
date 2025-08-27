@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo bootstrap5</title>
+
+    <link rel="stylesheet" href="../../bootstrap-5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+    <style>
+        .a {
+            height: 50px;
+            background-color: aqua;
+            /* margin-bottom: 50px; */
+        }
+
+        .b {
+            height: 50px;
+            background-color: blue;
+            /* margin-bottom: 50px; */
+        }
+
+        .c {
+            height: 50px;
+            background-color: antiquewhite;
+            /* margin-bottom: 50px; */
+        }
+
+        .d {
+            height: 50px;
+            background-color: red;
+            /* margin-bottom: 50px; */
+        }
+
+        div {
+            height: 60px;
+        }
+    </style>
+    <script>
+        // Bootstrap响应式布局
+        //     class = "container" 固定宽度的响应式布局，显示不同的固定宽度
+        //     class = "container-fluid" "流体宽度"的响应式布局：在不同的宽度区间，都显示100%的宽度。
+    </script>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+
+            <div class="col-6 a">1</div>
+            <div class="col-2 b">2</div>
+            <div class="col-2 c">3</div>
+            <div class="col-2 d">4</div>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="bg-primary">背景包bg-primary</div>
+        <div class="bg-success">背景包bg-success</div>
+        <div class="bg-danger">背景包bg-danger</div>
+        <div class="bg-info">背景包bg-info</div>
+        <div class="bg-light">背景包bg-light</div>
+
+        <div class="p-3 mb-2 bg-primary text-white">.bg-primary</div>
+        <div class="p-3 mb-2 bg-primary-subtle text-emphasis-primary">.bg-primary-subtle</div>
+        <div class="p-3 mb-2 bg-secondary text-white">.bg-secondary</div>
+        <div class="p-3 mb-2 bg-secondary-subtle text-emphasis-secondary">.bg-secondary-subtle</div>
+        <div class="p-3 mb-2 bg-success text-white">.bg-success</div>
+        <div class="p-3 mb-2 bg-success-subtle text-emphasis-success">.bg-success-subtle</div>
+        <div class="p-3 mb-2 bg-danger text-white">.bg-danger</div>
+        <div class="p-3 mb-2 bg-danger-subtle text-emphasis-danger">.bg-danger-subtle</div>
+        <div class="p-3 mb-2 bg-warning text-dark">.bg-warning</div>
+        <div class="p-3 mb-2 bg-warning-subtle text-emphasis-warning">.bg-warning-subtle</div>
+        <div class="p-3 mb-2 bg-info text-dark">.bg-info</div>
+        <div class="p-3 mb-2 bg-info-subtle text-emphasis-info">.bg-info-subtle</div>
+        <div class="p-3 mb-2 bg-light text-dark">.bg-light</div>
+        <div class="p-3 mb-2 bg-light-subtle text-emphasis-light">.bg-light-subtle</div>
+        <div class="p-3 mb-2 bg-dark text-white">.bg-dark</div>
+        <div class="p-3 mb-2 bg-dark-subtle text-emphasis-dark">.bg-dark-subtle</div>
+        <p class="p-3 mb-2 bg-body-secondary">.bg-body-secondary</p>
+        <p class="p-3 mb-2 bg-body-tertiary">.bg-body-tertiary</p>
+
+        <div class="p-3 mb-2 bg-body text-body">.bg-body</div>
+        <div class="p-3 mb-2 bg-black text-white">.bg-black</div>
+        <div class="p-3 mb-2 bg-white text-dark">.bg-white</div>
+        <div class="p-3 mb-2 bg-transparent text-body">.bg-transparent</div>
+    </div>
+
+    <br>
+    <div class="container">
+        <p class="text-primary">.text-primary</p>
+        <p class="text-primary-emphasis">.text-primary-emphasis</p>
+        <p class="text-secondary">.text-secondary</p>
+        <p class="text-secondary-emphasis">.text-secondary-emphasis</p>
+        <p class="text-success">.text-success</p>
+        <p class="text-success-emphasis">.text-success-emphasis</p>
+        <p class="text-danger">.text-danger</p>
+        <p class="text-danger-emphasis">.text-danger-emphasis</p>
+        <p class="text-warning bg-dark">.text-warning</p>
+        <p class="text-warning-emphasis">.text-warning-emphasis</p>
+        <p class="text-info bg-dark">.text-info</p>
+        <p class="text-info-emphasis">.text-info-emphasis</p>
+        <p class="text-light bg-dark">.text-light</p>
+        <p class="text-light-emphasis">.text-light-emphasis</p>
+        <p class="text-dark bg-white">.text-dark</p>
+        <p class="text-dark-emphasis">.text-dark-emphasis</p>
+        <p class="text-body">.text-body</p>
+        <p class="text-muted">.text-muted</p>
+
+        <p class="text-body-emphasis">.text-body-emphasis</p>
+        <p class="text-body-secondary">.text-body-secondary</p>
+        <p class="text-body-tertiary">.text-body-tertiary</p>
+
+        <p class="text-black bg-white">.text-black</p>
+        <p class="text-white bg-dark">.text-white</p>
+        <p class="text-black-50 bg-white">.text-black-50</p>
+        <p class="text-white-50 bg-dark">.text-white-50</p>
+    </div>
+</body>
+
+</html>

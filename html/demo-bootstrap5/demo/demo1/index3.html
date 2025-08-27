@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo bootstrap5</title>
+
+    <link rel="stylesheet" href="../../bootstrap-5.3.0-alpha1/dist/css/bootstrap.min.css">
+
+    <style>
+        .a {
+            height: 50px;
+            background-color: aqua;
+            /* margin-bottom: 50px; */
+        }
+
+        .b {
+            height: 50px;
+            background-color: blue;
+            /* margin-bottom: 50px; */
+        }
+
+        .c {
+            height: 50px;
+            background-color: antiquewhite;
+            /* margin-bottom: 50px; */
+        }
+
+        .d {
+            height: 50px;
+            background-color: red;
+            /* margin-bottom: 50px; */
+        }
+    </style>
+    <script>
+        /* Bootstrap响应式布局
+            class = "container" 固定宽度的响应式布局，显示不同的固定宽度
+            class = "container-fluid" "流体宽度"的响应式布局：在不同的宽度区间，都显示100%的宽度。\
+            class = 'row'  表示一行当中，自动生成12等分的栅格
+            class = 'col' 表示仅仅表示栅格列，可以排列很多列
+            class = 'col-<number>' 表示栅格占12等分的几个栅格
+            class = 'col-sm-<number>' 表示栅格列在手机占12等分的<number>个栅格
+            class = 'col-md-<number>' 表示栅格列在平板占12等分的<number>个栅格
+            class = 'col-lg-<number>' 表示栅格列在中等屏幕电脑占12等分的<number>个栅格
+            class = 'col-xl-<number>' 表示栅格列在笔记本电脑屏幕占12等分的<number>个栅格
+            class = 'col-xxl-<number>' 表示栅格列在大屏幕电脑屏幕占12等分的<number>个栅格
+
+        */
+    </script>
+</head>
+
+<body style="--bs-body-color: #333;">
+
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-4 col-md-2 col-lg-1 a">1</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">2</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 a">3</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">4</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 a">5</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">6</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 a">7</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">8</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 a">9</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">10</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 a">11</div>
+            <div class="col-sm-4 col-md-2 col-lg-1 b">12</div>
+
+        </div>
+    </div>
+
+    <div class="container">
+        <h1>标题1</h1>
+        <h2>标题2</h2>
+        <h3>标题3</h3>
+        <h4>标题4</h4>
+        <h5>标题5</h5>
+        <h6>标题6</h6>
+        <p>This is an example paragraph.</p>
+        <a href="#">This is an example link</a>
+        <a href="#" style="--bs-link-opacity: .5">This is an example link</a>
+        <a>This is a placeholder link</a>
+
+        <hr>
+
+        <div class="text-success">
+            <hr>
+        </div>
+
+        <hr class="border border-danger border-2 opacity-50">
+        <hr class="border border-primary border-3 opacity-75">
+
+        <pre><code>&lt;p&gt;Sample text here...&lt;/p&gt;
+&lt;p&gt;And another line of sample text here...&lt;/p&gt;
+</code></pre>
+
+        <var>y</var> = <var>m</var><var>x</var> + <var>b</var>
+
+        <table>
+            <caption>
+                This is an example table, and this is its caption to describe the contents.
+            </caption>
+            <thead>
+                <tr>
+                    <th>Table heading</th>
+                    <th>Table heading</th>
+                    <th>Table heading</th>
+                    <th>Table heading</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                </tr>
+                <tr>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                </tr>
+                <tr>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                    <td>Table cell</td>
+                </tr>
+            </tbody>
+        </table>
+        <table class="table table-striped table-hover table-dark ">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <br>
+
+        <table class="table table-striped table-hover table-bordered ">
+            <thead>
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="table table-striped table-hover table-bordered ">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">First</th>
+                    <th scope="col">Last</th>
+                    <th scope="col">Handle</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">1</th>
+                    <td>Mark</td>
+                    <td>Otto</td>
+                    <td>@mdo</td>
+                </tr>
+                <tr>
+                    <th scope="row">2</th>
+                    <td>Jacob</td>
+                    <td>Thornton</td>
+                    <td>@fat</td>
+                </tr>
+                <tr>
+                    <th scope="row">3</th>
+                    <td colspan="2">Larry the Bird</td>
+                    <td>@twitter</td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+
+
+
+</body>
+
+</html>

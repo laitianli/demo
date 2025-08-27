@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo4 jQuery</title>
+    <script src="js/jquery-3.6.0.min.js"></script>
+    <style>
+        body{
+            background-color: beige;
+        }
+    </style>
+</head>
+<body>
+    <ul class="nav">
+        <li>
+            <a href="#">微博1</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
+            </ul>
+        </li>
+        <li>
+            <a href="#">微博2</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
+            </ul>
+        </li>
+
+        <li>
+            <a href="#">微博3</a>
+            <ul>
+                <li>
+                    <a href="">私信</a>
+                </li>
+                <li>
+                    <a href="">评论</a>
+                </li>
+                <li>
+                    <a href="">@我</a>
+                </li>
+            </ul>
+        </li>
+
+    </ul>
+
+    <script>
+        document.title = 'Demo4: jQeuery实现下拉式菜单'
+
+        $(function(){
+            // 默认把所有的li标签隐藏
+            $('.nav>li>ul').hide();
+            // 鼠标放到对应的li标签就将ul标签显示出来
+            $('.nav>li').mouseover(function(){
+                $(this).children('ul').show();
+            })
+            // 鼠标离开li标签就将ul标签隐藏起来
+            $('.nav>li').mouseout(function(){
+                $(this).children('ul').hide();
+            })
+            
+
+        })
+    </script>
+</body>
+</html>
