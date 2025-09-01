@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Qemu虚拟机管理系统</title>
+    <!-- Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Font Awesome 图标 -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --main-purple: #6f42c1;
+            --sidebar-width: 250px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 顶部导航条样式 */
+        .navbar {
+            background-color: var(--main-purple);
+            padding: 0.5rem 1rem;
+        }
+        
+        .navbar-brand, .navbar-text {
+            color: white !important;
+            font-weight: bold;
+        }
+        
+        /* 侧边栏样式 */
+        .sidebar {
+            width: var(--sidebar-width);
+            height: calc(100vh - 56px);
+            background-color: #f5f5f5;
+            border-right: 1px solid #dee2e6;
+            padding: 20px 0;
+            position: fixed;
+            overflow-y: auto;
+        }
+        
+        .sidebar .nav-link {
+            color: #495057;
+            padding: 12px 20px;
+            border-left: 4px solid transparent;
+            transition: all 0.2s;
+        }
+        
+        .sidebar .nav-link:hover {
+            background-color: #e9ecef;
+        }
+        
+        .sidebar .nav-link.active {
+            background-color: #e9ecef;
+            border-left-color: var(--main-purple);
+            color: var(--main-purple);
+            font-weight: bold;
+        }
+        
+        /* 主内容区域样式 */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 20px;
+            min-height: calc(100vh - 56px);
+        }
+        
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #dee2e6;
+        }
+        
+        /* 表格样式 */
+        .table th {
+            background-color: #f8f9fa;
+            font-weight: 600;
+        }
+        
+        .status-running {
+            color: #198754;
+            font-weight: bold;
+        }
+        
+        .status-stopped {
+            color: #dc3545;
+            font-weight: bold;
+        }
+        
+        .btn-new-vm {
+            background-color: #198754;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .btn-new-vm:hover {
+            background-color: #157347;
+        }
+        
+        .action-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+        
+        .action-btn {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+        }
+        
+        .vm-name-link {
+            color: #0d6efd;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        
+        .vm-name-link:hover {
+            text-decoration: underline;
+        }
+        
+        .content-panel {
+            display: none;
+        }
+        
+        .content-panel.active {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <!-- 顶部导航条 -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1">Qemu虚拟机管理系统</span>
+            <div class="d-flex">
+                <span class="navbar-text me-3">基础架构</span>
+                <span class="navbar-text">退出</span>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧边栏 -->
+            <div class="col-md-2 sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-panel="vm-instances">
+                            <i class="fas fa-server me-2"></i>虚机实例
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-panel="storage-pool">
+                            <i class="fas fa-database me-2"></i>存储池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-panel="network-pool">
+                            <i class="fas fa-network-wired me-2"></i>网络池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-panel="network-interface">
+                            <i class="fas fa-ethernet me-2"></i>网络接口
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-panel="secrets">
+                            <i class="fas fa-key me-2"></i>Secrets
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-panel="overview">
+                            <i class="fas fa-chart-pie me-2"></i>概览
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 主内容区域 -->
+            <div class="col-md-10 main-content">
+                <!-- 虚机实例面板 -->
+                <div class="content-panel active" id="vm-instances-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">vm - ssh</h2>
+                        <button class="btn btn-new-vm" id="newVmBtn">
+                            <i class="fas fa-plus-circle me-2"></i>新建虚拟实例
+                        </button>
+                    </div>
+
+                    <!-- 虚拟机实例表格 -->
+                    <div class="card">
+                        <div class="card-body">
+                            <table class="table table-hover" id="vmTable">
+                                <thead>
+                                    <tr>
+                                        <th>名称</th>
+                                        <th>状态</th>
+                                        <th>VCPUs</th>
+                                        <th>内存</th>
+                                        <th>执行</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><a href="#" class="vm-name-link" data-vm-id="vm1">text-vm-centos</a></td>
+                                        <td class="status-stopped">关闭</td>
+                                        <td>4</td>
+                                        <td>8192MB</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="vm-name-link" data-vm-id="vm2">vm1</a></td>
+                                        <td class="status-stopped">关闭</td>
+                                        <td>-</td>
+                                        <td>4096MB</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="vm-name-link" data-vm-id="vm3">windows10</a></td>
+                                        <td class="status-stopped">关闭</td>
+                                        <td>2</td>
+                                        <td>4096MB</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td><a href="#" class="vm-name-link" data-vm-id="vm4">vm-ubuntu22.04</a></td>
+                                        <td class="status-running">运行</td>
+                                        <td>8</td>
+                                        <td>8196MB</td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 存储池面板 -->
+                <div class="content-panel" id="storage-pool-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">存储池</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>这里是存储池管理内容。您可以查看和管理所有存储资源。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 网络池面板 -->
+                <div class="content-panel" id="network-pool-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">网络池</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>这里是网络池管理内容。您可以配置虚拟网络和网络资源。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 网络接口面板 -->
+                <div class="content-panel" id="network-interface-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">网络接口</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>这里是网络接口管理内容。您可以查看和配置网络接口设置。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Secrets面板 -->
+                <div class="content-panel" id="secrets-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">Secrets</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>这里是Secrets管理内容。您可以管理敏感信息和凭证。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 概览面板 -->
+                <div class="content-panel" id="overview-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">概览</h2>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <p>这里是系统概览内容。您可以查看系统状态和资源使用情况。</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 虚拟机详情面板 -->
+                <div class="content-panel" id="vm-detail-panel">
+                    <div class="page-header">
+                        <h2 class="text-primary">虚拟机详情</h2>
+                        <button class="btn btn-outline-secondary" id="backToVmList">
+                            <i class="fas fa-arrow-left me-2"></i>返回列表
+                        </button>
+                    </div>
+                    <div class="card">
+                        <div class="card-body">
+                            <h4 id="vm-detail-name"></h4>
+                            <div class="row mt-4">
+                                <div class="col-md-6">
+                                    <h5>基本信息</h5>
+                                    <table class="table">
+                                        <tr>
+                                            <th width="30%">名称</th>
+                                            <td id="detail-name"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>状态</th>
+                                            <td id="detail-status"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>VCPUs</th>
+                                            <td id="detail-vcpus"></td>
+                                        </tr>
+                                        <tr>
+                                            <th>内存</th>
+                                            <td id="detail-memory"></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                                <div class="col-md-6">
+                                    <h5>操作</h5>
+                                    <div class="d-flex flex-wrap gap-2 mt-3">
+                                        <button class="btn btn-outline-success"><i class="fas fa-play me-2"></i>启动</button>
+                                        <button class="btn btn-outline-secondary"><i class="fas fa-pause me-2"></i>暂停</button>
+                                        <button class="btn btn-outline-info"><i class="fas fa-save me-2"></i>保存</button>
+                                        <button class="btn btn-outline-warning"><i class="fas fa-power-off me-2"></i>关机</button>
+                                        <button class="btn btn-outline-danger"><i class="fas fa-bolt me-2"></i>强制关机</button>
+                                        <button class="btn btn-outline-primary"><i class="fas fa-terminal me-2"></i>控制台</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 新建虚拟机模态框 -->
+    <div class="modal fade" id="newVmModal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">新建虚拟实例</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="vmForm">
+                        <div class="mb-3">
+                            <label for="vmName" class="form-label">虚拟机名称</label>
+                            <input type="text" class="form-control" id="vmName" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="vcpus" class="form-label">VCPUs数量</label>
+                            <input type="number" class="form-control" id="vcpus" min="1" value="2">
+                        </div>
+                        <div class="mb-3">
+                            <label for="memory" class="form-label">内存大小 (MB)</label>
+                            <input type="number" class="form-control" id="memory" min="512" value="2048">
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-primary" id="submitVm">创建</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="./static/js/jquery-3.6.0.min.js"></script>
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 侧边栏菜单切换
+            $('.sidebar .nav-link').click(function(e) {
+                e.preventDefault();
+                $('.sidebar .nav-link').removeClass('active');
+                $(this).addClass('active');
+                
+                const panelId = $(this).data('panel') + '-panel';
+                $('.content-panel').removeClass('active');
+                $('#' + panelId).addClass('active');
+            });
+            
+            // 显示新建虚拟机模态框
+            $('#newVmBtn').click(function() {
+                $('#newVmModal').modal('show');
+            });
+            
+            // 提交新虚拟机表单
+            $('#submitVm').click(function() {
+                // 获取表单数据
+                const name = $('#vmName').val();
+                const vcpus = $('#vcpus').val();
+                const memory = $('#memory').val();
+                
+                if (!name) {
+                    alert('请输入虚拟机名称');
+                    return;
+                }
+                
+                // 添加新行到表格
+                const newRow = `
+                    <tr>
+                        <td><a href="#" class="vm-name-link" data-vm-id="vm${Date.now()}">${name}</a></td>
+                        <td class="status-stopped">关闭</td>
+                        <td>${vcpus}</td>
+                        <td>${memory}MB</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
+                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
+                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
+                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
+                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
+                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                
+                $('#vmTable tbody').prepend(newRow);
+                
+                // 关闭模态框并重置表单
+                $('#newVmModal').modal('hide');
+                $('#vmForm')[0].reset();
+            });
+            
+            // 虚拟机名称点击事件 - 显示详情
+            $(document).on('click', '.vm-name-link', function(e) {
+                e.preventDefault();
+                const vmId = $(this).data('vm-id');
+                const vmName = $(this).text();
+                const vmStatus = $(this).closest('tr').find('td:eq(1)').text();
+                const vmVcpus = $(this).closest('tr').find('td:eq(2)').text();
+                const vmMemory = $(this).closest('tr').find('td:eq(3)').text();
+                
+                // 填充详情数据
+                $('#vm-detail-name').text(vmName + ' 详情');
+                $('#detail-name').text(vmName);
+                $('#detail-status').text(vmStatus);
+                $('#detail-vcpus').text(vmVcpus);
+                $('#detail-memory').text(vmMemory);
+                
+                // 显示详情面板
+                $('.content-panel').removeClass('active');
+                $('#vm-detail-panel').addClass('active');
+            });
+            
+            // 返回虚拟机列表
+            $('#backToVmList').click(function() {
+                $('.content-panel').removeClass('active');
+                $('#vm-instances-panel').addClass('active');
+            });
+            
+            // 为表格中的按钮添加事件委托
+            $('#vmTable').on('click', '.btn-outline-success', function() {
+                const row = $(this).closest('tr');
+                const statusCell = row.find('td:eq(1)');
+                statusCell.removeClass('status-stopped').addClass('status-running');
+                statusCell.text('运行');
+                alert('虚拟机已启动');
+            });
+            
+            $('#vmTable').on('click', '.btn-outline-warning', function() {
+                const row = $(this).closest('tr');
+                const statusCell = row.find('td:eq(1)');
+                statusCell.removeClass('status-running').addClass('status-stopped');
+                statusCell.text('关闭');
+                alert('虚拟机已关机');
+            });
+        });
+    </script>
+</body>
+</html>
