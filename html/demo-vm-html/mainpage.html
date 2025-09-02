@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,28 +13,29 @@
     <link href="./static/css/all.min.css" rel="stylesheet">
     <style>
         :root {
-            --main-purple: #6f42c1;
+            --main-purple: #4284c1;
             --sidebar-width: 250px;
         }
-        
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fa;
             margin: 0;
             padding: 0;
         }
-        
+
         /* 顶部导航条样式 */
         .navbar {
             background-color: var(--main-purple);
             padding: 0.5rem 1rem;
         }
-        
-        .navbar-brand, .navbar-text {
+
+        .navbar-brand,
+        .navbar-text {
             color: white !important;
             font-weight: bold;
         }
-        
+
         /* 侧边栏样式 */
         .sidebar {
             width: var(--sidebar-width);
@@ -44,32 +46,32 @@
             position: fixed;
             overflow-y: auto;
         }
-        
+
         .sidebar .nav-link {
             color: #495057;
             padding: 12px 20px;
             border-left: 4px solid transparent;
             transition: all 0.2s;
         }
-        
+
         .sidebar .nav-link:hover {
             background-color: #e9ecef;
         }
-        
+
         .sidebar .nav-link.active {
             background-color: #e9ecef;
             border-left-color: var(--main-purple);
             color: var(--main-purple);
             font-weight: bold;
         }
-        
+
         /* 主内容区域样式 */
         .main-content {
             margin-left: var(--sidebar-width);
             padding: 20px;
             min-height: calc(100vh - 56px);
         }
-        
+
         .page-header {
             display: flex;
             justify-content: space-between;
@@ -78,39 +80,39 @@
             padding-bottom: 10px;
             border-bottom: 1px solid #dee2e6;
         }
-        
+
         /* 表格样式 */
         .table th {
             background-color: #f8f9fa;
             font-weight: 600;
         }
-        
+
         .status-running {
             color: #198754;
             font-weight: bold;
         }
-        
+
         .status-stopped {
             color: #dc3545;
             font-weight: bold;
         }
-        
+
         .btn-new-vm {
             background-color: #198754;
             color: white;
             font-weight: bold;
         }
-        
+
         .btn-new-vm:hover {
             background-color: #157347;
         }
-        
+
         .action-buttons {
             display: flex;
             flex-wrap: wrap;
             gap: 5px;
         }
-        
+
         .action-btn {
             width: 32px;
             height: 32px;
@@ -119,34 +121,45 @@
             justify-content: center;
             border-radius: 4px;
         }
-        
+
         .vm-name-link {
             color: #0d6efd;
             text-decoration: none;
             font-weight: 500;
         }
-        
+
         .vm-name-link:hover {
             text-decoration: underline;
         }
-        
+
         .content-panel {
             display: none;
         }
-        
+
         .content-panel.active {
             display: block;
         }
     </style>
 </head>
+
 <body>
     <!-- 顶部导航条 -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid">
             <span class="navbar-brand mb-0 h1">Qemu虚拟机管理系统</span>
             <div class="d-flex">
-                <span class="navbar-text me-3">基础架构</span>
-                <span class="navbar-text">退出</span>
+                <p class="fw-normal  me-1  col-form-label">用户名: </p>
+                <p class="fw-normal  me-3  col-form-label" id="username">haizhi</p>
+                <button class="btn btn-danger me-5" id="userLogout">退出</button>
+                <div class="row">
+                    <label for="" class="col-md-5 text-end col-form-label">语言：</label>
+                    <div class="col-md-7">
+                        <select name="" id="languageSelectID" class="form-select">
+                            <option value="">中文</option>
+                            <option value="">English</option>
+                        </select>
+                    </div>
+                </div>
             </div>
         </div>
     </nav>
@@ -221,12 +234,18 @@
                                         <td>8192MB</td>
                                         <td>
                                             <div class="action-buttons">
-                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
-                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
-                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
-                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i
+                                                        class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn"
+                                                    title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i
+                                                        class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i
+                                                        class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i
+                                                        class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i
+                                                        class="fas fa-terminal"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -237,12 +256,18 @@
                                         <td>4096MB</td>
                                         <td>
                                             <div class="action-buttons">
-                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
-                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
-                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
-                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i
+                                                        class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn"
+                                                    title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i
+                                                        class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i
+                                                        class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i
+                                                        class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i
+                                                        class="fas fa-terminal"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -253,12 +278,18 @@
                                         <td>4096MB</td>
                                         <td>
                                             <div class="action-buttons">
-                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
-                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
-                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
-                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i
+                                                        class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn"
+                                                    title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i
+                                                        class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i
+                                                        class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i
+                                                        class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i
+                                                        class="fas fa-terminal"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -269,12 +300,18 @@
                                         <td>8196MB</td>
                                         <td>
                                             <div class="action-buttons">
-                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i class="fas fa-play"></i></button>
-                                                <button class="btn btn-sm btn-outline-secondary action-btn" title="暂停"><i class="fas fa-pause"></i></button>
-                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i class="fas fa-save"></i></button>
-                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i class="fas fa-power-off"></i></button>
-                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i class="fas fa-bolt"></i></button>
-                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i class="fas fa-terminal"></i></button>
+                                                <button class="btn btn-sm btn-outline-success action-btn" title="启动"><i
+                                                        class="fas fa-play"></i></button>
+                                                <button class="btn btn-sm btn-outline-secondary action-btn"
+                                                    title="暂停"><i class="fas fa-pause"></i></button>
+                                                <button class="btn btn-sm btn-outline-info action-btn" title="保存"><i
+                                                        class="fas fa-save"></i></button>
+                                                <button class="btn btn-sm btn-outline-warning action-btn" title="关机"><i
+                                                        class="fas fa-power-off"></i></button>
+                                                <button class="btn btn-sm btn-outline-danger action-btn" title="强制关机"><i
+                                                        class="fas fa-bolt"></i></button>
+                                                <button class="btn btn-sm btn-outline-primary action-btn" title="控制台"><i
+                                                        class="fas fa-terminal"></i></button>
                                             </div>
                                         </td>
                                     </tr>
@@ -380,12 +417,17 @@
                                 <div class="col-md-6">
                                     <h5>操作</h5>
                                     <div class="d-flex flex-wrap gap-2 mt-3">
-                                        <button class="btn btn-outline-success"><i class="fas fa-play me-2"></i>启动</button>
-                                        <button class="btn btn-outline-secondary"><i class="fas fa-pause me-2"></i>暂停</button>
+                                        <button class="btn btn-outline-success"><i
+                                                class="fas fa-play me-2"></i>启动</button>
+                                        <button class="btn btn-outline-secondary"><i
+                                                class="fas fa-pause me-2"></i>暂停</button>
                                         <button class="btn btn-outline-info"><i class="fas fa-save me-2"></i>保存</button>
-                                        <button class="btn btn-outline-warning"><i class="fas fa-power-off me-2"></i>关机</button>
-                                        <button class="btn btn-outline-danger"><i class="fas fa-bolt me-2"></i>强制关机</button>
-                                        <button class="btn btn-outline-primary"><i class="fas fa-terminal me-2"></i>控制台</button>
+                                        <button class="btn btn-outline-warning"><i
+                                                class="fas fa-power-off me-2"></i>关机</button>
+                                        <button class="btn btn-outline-danger"><i
+                                                class="fas fa-bolt me-2"></i>强制关机</button>
+                                        <button class="btn btn-outline-primary"><i
+                                                class="fas fa-terminal me-2"></i>控制台</button>
                                     </div>
                                 </div>
                             </div>
@@ -434,35 +476,35 @@
     <script src="./static/js/jquery-3.6.0.min.js"></script>
     <script src="./static/js/bootstrap.bundle.min.js"></script>
     <script>
-        $(document).ready(function() {
+        $(document).ready(function () {
             // 侧边栏菜单切换
-            $('.sidebar .nav-link').click(function(e) {
+            $('.sidebar .nav-link').click(function (e) {
                 e.preventDefault();
                 $('.sidebar .nav-link').removeClass('active');
                 $(this).addClass('active');
-                
+
                 const panelId = $(this).data('panel') + '-panel';
                 $('.content-panel').removeClass('active');
                 $('#' + panelId).addClass('active');
             });
-            
+
             // 显示新建虚拟机模态框
-            $('#newVmBtn').click(function() {
+            $('#newVmBtn').click(function () {
                 $('#newVmModal').modal('show');
             });
-            
+
             // 提交新虚拟机表单
-            $('#submitVm').click(function() {
+            $('#submitVm').click(function () {
                 // 获取表单数据
                 const name = $('#vmName').val();
                 const vcpus = $('#vcpus').val();
                 const memory = $('#memory').val();
-                
+
                 if (!name) {
                     alert('请输入虚拟机名称');
                     return;
                 }
-                
+
                 // 添加新行到表格
                 const newRow = `
                     <tr>
@@ -482,51 +524,51 @@
                         </td>
                     </tr>
                 `;
-                
+
                 $('#vmTable tbody').prepend(newRow);
-                
+
                 // 关闭模态框并重置表单
                 $('#newVmModal').modal('hide');
                 $('#vmForm')[0].reset();
             });
-            
+
             // 虚拟机名称点击事件 - 显示详情
-            $(document).on('click', '.vm-name-link', function(e) {
+            $(document).on('click', '.vm-name-link', function (e) {
                 e.preventDefault();
                 const vmId = $(this).data('vm-id');
                 const vmName = $(this).text();
                 const vmStatus = $(this).closest('tr').find('td:eq(1)').text();
                 const vmVcpus = $(this).closest('tr').find('td:eq(2)').text();
                 const vmMemory = $(this).closest('tr').find('td:eq(3)').text();
-                
+
                 // 填充详情数据
                 $('#vm-detail-name').text(vmName + ' 详情');
                 $('#detail-name').text(vmName);
                 $('#detail-status').text(vmStatus);
                 $('#detail-vcpus').text(vmVcpus);
                 $('#detail-memory').text(vmMemory);
-                
+
                 // 显示详情面板
                 $('.content-panel').removeClass('active');
                 $('#vm-detail-panel').addClass('active');
             });
-            
+
             // 返回虚拟机列表
-            $('#backToVmList').click(function() {
+            $('#backToVmList').click(function () {
                 $('.content-panel').removeClass('active');
                 $('#vm-instances-panel').addClass('active');
             });
-            
+
             // 为表格中的按钮添加事件委托
-            $('#vmTable').on('click', '.btn-outline-success', function() {
+            $('#vmTable').on('click', '.btn-outline-success', function () {
                 const row = $(this).closest('tr');
                 const statusCell = row.find('td:eq(1)');
                 statusCell.removeClass('status-stopped').addClass('status-running');
                 statusCell.text('运行');
                 alert('虚拟机已启动');
             });
-            
-            $('#vmTable').on('click', '.btn-outline-warning', function() {
+
+            $('#vmTable').on('click', '.btn-outline-warning', function () {
                 const row = $(this).closest('tr');
                 const statusCell = row.find('td:eq(1)');
                 statusCell.removeClass('status-running').addClass('status-stopped');
@@ -536,4 +578,5 @@
         });
     </script>
 </body>
+
 </html>
