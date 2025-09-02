@@ -1,0 +1,30 @@
+<div class="modal fade" id="newVmModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">新建虚拟实例</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form id="vmForm">
+                    <div class="mb-3">
+                        <label for="vmName" class="form-label">虚拟机名称</label>
+                        <input type="text" class="form-control" id="vmName" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="vcpus" class="form-label">VCPUs数量</label>
+                        <input type="number" class="form-control" id="vcpus" min="1" value="2">
+                    </div>
+                    <div class="mb-3">
+                        <label for="memory" class="form-label">内存大小 (MB)</label>
+                        <input type="number" class="form-control" id="memory" min="512" value="2048">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                <button type="button" class="btn btn-primary" id="submitVm">创建</button>
+            </div>
+        </div>
+    </div>
+</div>

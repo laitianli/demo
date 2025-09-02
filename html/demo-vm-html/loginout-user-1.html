@@ -8,120 +8,118 @@
     <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
     <!-- Font Awesome -->
     <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
-      <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="./static/css/all.min.css">
     <style>
         body {
             font-family: 'Microsoft YaHei', sans-serif;
-            /* background-color: #f8f9fa; */
-            background: linear-gradient(135deg, #1976d2, #42a5f5);
-            color: #495057;
+            background-color: #0a0a0a;
+            color: #d4af37; /* 金色 */
             height: 100vh;
             margin: 0;
             display: flex;
             align-items: center;
         }
         .login-container {
-            background-color: #f8f9fa;
-            border: 1px solid #dee2e6;
+            background-color: rgba(0, 0, 0, 0.85);
+            border: 2px solid #d4af37;
             border-radius: 10px;
             overflow: hidden;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 25px rgba(212, 175, 55, 0.3);
         }
         .left-panel {
-            background-color: #f8f9fa;
+            background: linear-gradient(rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7));
             padding: 40px;
-            border-right: 1px solid #dee2e6;
+            border-right: 2px solid #d4af37;
         }
         .right-panel {
             padding: 30px;
-            background-color: #f8f9fa;
+            background: rgba(10, 10, 10, 0.95);
         }
         .system-name {
             font-size: 2.5rem;
             font-weight: bold;
             margin-bottom: 20px;
-            color: #2c3e50;
+            text-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
         }
         .system-description {
-            color: #6c757d;
+            color: #c0c0c0;
             margin-bottom: 30px;
             font-size: 1.1rem;
             line-height: 1.6;
         }
         .feature-box {
-            border: 1px solid #dee2e6;
+            border: 1px solid #d4af37;
             border-radius: 8px;
             padding: 15px;
             margin-bottom: 20px;
-            background-color: #ffffff;
+            background-color: rgba(0, 0, 0, 0.5);
             transition: all 0.3s;
         }
         .feature-box:hover {
             transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.2);
         }
         .feature-title {
             font-weight: bold;
             margin-bottom: 10px;
-            color: #2c3e50;
+            color: #d4af37;
         }
         .feature-description {
-            color: #6c757d;
+            color: #c0c0c0;
             font-size: 0.95rem;
         }
         .user-type-tabs {
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #d4af37;
         }
         .user-type-tabs .nav-link {
-            color: #6c757d;
+            color: #c0c0c0;
             border: none;
             padding: 10px 20px;
         }
         .user-type-tabs .nav-link.active {
             background-color: transparent;
-            color: #2c3e50;
-            border-bottom: 2px solid #2c3e50;
+            color: #d4af37;
+            border-bottom: 2px solid #d4af37;
         }
         .login-form {
             padding: 20px 0;
         }
         .form-control {
-            background-color: #ffffff;
-            border: 1px solid #ced4da;
-            color: #495057;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #d4af37;
+            color: #fff;
             padding: 12px;
         }
         .form-control:focus {
-            background-color: #ffffff;
-            box-shadow: 0 0 0 0.25rem rgba(44, 62, 80, 0.25);
-            border-color: #2c3e50;
-            color: #495057;
+            background-color: rgba(0, 0, 0, 0.7);
+            box-shadow: 0 0 0 0.25rem rgba(212, 175, 55, 0.25);
+            border-color: #d4af37;
+            color: #fff;
         }
         .form-check-input {
-            background-color: #ffffff;
-            border: 1px solid #ced4da;
+            background-color: rgba(0, 0, 0, 0.5);
+            border: 1px solid #d4af37;
         }
         .form-check-input:checked {
-            background-color: #2c3e50;
-            border-color: #2c3e50;
+            background-color: #d4af37;
+            border-color: #d4af37;
         }
-        .btn-primary {
-            background-color: #2c3e50;
-            color: #ffffff;
+        .btn-gold {
+            background-color: #d4af37;
+            color: #000;
             font-weight: bold;
             padding: 10px 20px;
-            border: none;
         }
-        .btn-primary:hover {
-            background-color: #1a2635;
-            color: #ffffff;
+        .btn-gold:hover {
+            background-color: #c5a028;
+            color: #000;
         }
         .forgot-password {
-            color: #2c3e50;
+            color: #d4af37;
             text-decoration: none;
         }
         .forgot-password:hover {
@@ -131,14 +129,14 @@
             display: flex;
             align-items: center;
             text-align: center;
-            color: #6c757d;
+            color: #c0c0c0;
             margin: 20px 0;
         }
         .divider::before,
         .divider::after {
             content: '';
             flex: 1;
-            border-bottom: 1px solid #dee2e6;
+            border-bottom: 1px solid #d4af37;
         }
         .divider::before {
             margin-right: .25em;
@@ -151,8 +149,8 @@
             margin-top: 20px;
         }
         .vip-badge {
-            background-color: #2c3e50;
-            color: #ffffff;
+            background-color: #d4af37;
+            color: #000;
             padding: 3px 10px;
             border-radius: 15px;
             font-size: 0.8rem;
@@ -163,15 +161,14 @@
         .qr-code {
             width: 150px;
             height: 150px;
-            background-color: #f8f9fa;
+            background: linear-gradient(45deg, #d4af37, #f5d76e);
             border-radius: 10px;
             margin: 0 auto 15px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #2c3e50;
+            color: #000;
             font-size: 3rem;
-            border: 1px solid #dee2e6;
         }
     </style>
 </head>
@@ -243,8 +240,8 @@
                                 <a href="#" class="forgot-password float-end">忘记密码?</a>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">登录</button>
-                                <button type="button" class="btn btn-outline-secondary">注册</button>
+                                <button type="submit" class="btn btn-gold btn-lg">登录</button>
+                                <button type="button" class="btn btn-outline-light">注册</button>
                             </div>
                         </form>
                     </div>
@@ -266,8 +263,8 @@
                                 <a href="#" class="forgot-password float-end">忘记密码?</a>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">登录</button>
-                                <button type="button" class="btn btn-outline-secondary">注册</button>
+                                <button type="submit" class="btn btn-gold btn-lg">登录</button>
+                                <button type="button" class="btn btn-outline-light">注册</button>
                             </div>
                         </form>
                     </div>
@@ -289,8 +286,8 @@
                                 <a href="#" class="forgot-password float-end">忘记密码?</a>
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="btn btn-primary btn-lg">登录</button>
-                                <button type="button" class="btn btn-outline-secondary">注册</button>
+                                <button type="submit" class="btn btn-gold btn-lg">登录</button>
+                                <button type="button" class="btn btn-outline-light">注册</button>
                             </div>
                         </form>
                     </div>
@@ -304,7 +301,7 @@
                     <div class="qr-code">
                         <i class="fas fa-qrcode"></i>
                     </div>
-                    <button class="btn btn-outline-primary">APP下载</button>
+                    <button class="btn btn-outline-warning">APP下载</button>
                 </div>
             </div>
         </div>
@@ -312,7 +309,8 @@
 
     <!-- Bootstrap & jQuery JS -->
     <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+     -->
     <script src="./static/js/jquery-3.6.0.min.js"></script>
     <script src="./static/js/bootstrap.bundle.min.js"></script>
     <script>
@@ -325,7 +323,7 @@
             });
             
             // 注册按钮点击事件
-            $('.btn-outline-secondary').click(function() {
+            $('.btn-outline-light').click(function() {
                 alert('跳转到注册页面（模拟）');
             });
             
