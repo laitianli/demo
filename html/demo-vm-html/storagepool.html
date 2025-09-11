@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VMWM - 存储池管理</title>
+    <!-- Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Font Awesome -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            background-color: #ffffff;
+            border-right: 1px solid #dee2e6;
+            height: calc(100vh - 60px);
+        }
+
+        .sidebar .nav-link {
+            color: #495057;
+            border-radius: 0;
+            padding: 12px 20px;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: #e9ecef;
+            color: #2c3e50;
+            font-weight: bold;
+            border-left: 4px solid #2c3e50;
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: #e9ecef;
+        }
+
+        .main-content {
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .storage-card {
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+        }
+
+        .storage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .storage-card .card-body {
+            padding: 20px;
+        }
+
+        .storage-card .card-title {
+            color: #2c3e50;
+            font-weight: bold;
+        }
+
+        .storage-card .card-text {
+            color: #6c757d;
+        }
+
+        .sub-tab-content {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 0 0 5px 5px;
+            background-color: #ffffff;
+        }
+
+        .directory-table th {
+            background-color: #f8f9fa;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧边栏 -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-content="overview">
+                            <i class="fas fa-chart-pie me-2"></i>概览
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-content="storage-pool">
+                            <i class="fas fa-database me-2"></i>存储池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-content="network-pool">
+                            <i class="fas fa-network-wired me-2"></i>网络池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-content="interface">
+                            <i class="fas fa-ethernet me-2"></i>网络接口
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-content="secrets">
+                            <i class="fas fa-key me-2"></i>Secrets
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 右侧内容区域 -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <div id="content-area">
+                    <!-- 存储池子页面 -->
+                    <div class="content-section" id="storage-pool-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4>存储池管理</h4>
+                            <button class="btn btn-primary" id="createStoragePoolBtn">
+                                <i class="fas fa-plus me-2"></i>新建存储池
+                            </button>
+                        </div>
+
+                        <div class="row">
+                            <!-- 本地存储池Card -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card storage-card" id="localStorageCard">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-hdd me-2"></i>本地存储池
+                                        </h5>
+                                        <p class="card-text">
+                                            存储空间: 256.5 GB / 500 GB<br>
+                                            镜像文件: 12 个
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- ISO池Card -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card storage-card" id="isoPoolCard">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-compact-disc me-2"></i>ISO池
+                                        </h5>
+                                        <p class="card-text">
+                                            存储空间: 45.2 GB / 100 GB<br>
+                                            ISO文件: 8 个
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 网络存储池Card -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card storage-card" id="networkStorageCard">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-network-wired me-2"></i>网络存储池
+                                        </h5>
+                                        <p class="card-text">
+                                            存储空间: 1.2 TB / 2 TB<br>
+                                            镜像文件: 24 个
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- CEPH存储池Card -->
+                            <div class="col-md-6 mb-4">
+                                <div class="card storage-card" id="cephStorageCard">
+                                    <div class="card-body">
+                                        <h5 class="card-title">
+                                            <i class="fas fa-server me-2"></i>CEPH存储池
+                                        </h5>
+                                        <p class="card-text">
+                                            存储空间: 5 TB / 10 TB<br>
+                                            镜像文件: 36 个
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 本地存储池子页面 (默认隐藏) -->
+                    <div class="content-section d-none" id="local-storage-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4><i class="fas fa-hdd me-2"></i>本地存储池</h4>
+                            <button class="btn btn-outline-primary" id="addLocalDirectoryBtn">
+                                <i class="fas fa-folder-plus me-2"></i>添加目录
+                            </button>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>默认目录</h5>
+                            <p>/var/lib/libvirt/images</p>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 65%;" aria-valuenow="65"
+                                    aria-valuemin="0" aria-valuemax="100">65%</div>
+                            </div>
+                            <p>已使用: 256.5 GB / 500 GB</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>自定义目录</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered directory-table">
+                                    <thead>
+                                        <tr>
+                                            <th>目录路径</th>
+                                            <th>使用情况</th>
+                                            <th>镜像数量</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>/data/vm_images</td>
+                                            <td>
+                                                <div class="progress" style="height: 20px;">
+                                                    <div class="progress-bar" role="progressbar" style="width: 45%;"
+                                                        aria-valuenow="45" aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <small>120 GB / 300 GB</small>
+                                            </td>
+                                            <td>8</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger">移除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+
+                        <!-- 修改为标签页形式的镜像文件列表 -->
+                        <div class="mb-4">
+                            <h5>镜像文件列表</h5>
+                            <ul class="nav nav-tabs" id="imageTabs" role="tablist">
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link active" id="default-images-tab" data-bs-toggle="tab"
+                                        data-bs-target="#default-images" type="button" role="tab"
+                                        aria-controls="default-images" aria-selected="true">
+                                        默认目录镜像
+                                    </button>
+                                </li>
+                                <li class="nav-item" role="presentation">
+                                    <button class="nav-link" id="custom-images-tab" data-bs-toggle="tab"
+                                        data-bs-target="#custom-images" type="button" role="tab"
+                                        aria-controls="custom-images" aria-selected="false">
+                                        自定义目录镜像
+                                    </button>
+                                </li>
+                            </ul>
+
+                            <div class="tab-content sub-tab-content">
+                                <div class="tab-pane fade show active" id="default-images" role="tabpanel"
+                                    aria-labelledby="default-images-tab">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>centos7.qcow2</td>
+                                                    <td>20 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>ubuntu20.qcow2</td>
+                                                    <td>25 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+
+                                <div class="tab-pane fade" id="custom-images" role="tabpanel"
+                                    aria-labelledby="custom-images-tab">
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>custom_vm1.qcow2</td>
+                                                    <td>30 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>2</td>
+                                                    <td>custom_vm2.qcow2</td>
+                                                    <td>35 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- ISO池子页面 (默认隐藏) -->
+                    <div class="content-section d-none" id="iso-pool-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4><i class="fas fa-compact-disc me-2"></i>ISO池</h4>
+                            <button class="btn btn-primary" id="uploadIsoBtn">
+                                <i class="fas fa-upload me-2"></i>上传ISO
+                            </button>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>存储信息</h5>
+                            <div class="progress mb-3">
+                                <div class="progress-bar" role="progressbar" style="width: 45%;" aria-valuenow="45"
+                                    aria-valuemin="0" aria-valuemax="100">45%</div>
+                            </div>
+                            <p>已使用: 45.2 GB / 100 GB</p>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>ISO文件列表</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered directory-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>文件名</th>
+                                            <th>大小</th>
+                                            <th>格式</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>CentOS-7-x86_64-DVD-2009.iso</td>
+                                            <td>4.2 GB</td>
+                                            <td>ISO</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger">删除</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>ubuntu-20.04.3-live-server-amd64.iso</td>
+                                            <td>1.2 GB</td>
+                                            <td>ISO</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-danger">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 网络存储池子页面 (默认隐藏) -->
+                    <div class="content-section d-none" id="network-storage-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4><i class="fas fa-network-wired me-2"></i>网络存储池</h4>
+                        </div>
+
+                        <ul class="nav nav-tabs" id="networkStorageTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="nfs-tab" data-bs-toggle="tab" data-bs-target="#nfs"
+                                    type="button" role="tab" aria-controls="nfs" aria-selected="true">NFS</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="cifs-tab" data-bs-toggle="tab" data-bs-target="#cifs"
+                                    type="button" role="tab" aria-controls="cifs" aria-selected="false">CIFS</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="iscsi-tab" data-bs-toggle="tab" data-bs-target="#iscsi"
+                                    type="button" role="tab" aria-controls="iscsi" aria-selected="false">iSCSI</button>
+                            </li>
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="glusterfs-tab" data-bs-toggle="tab"
+                                    data-bs-target="#glusterfs" type="button" role="tab" aria-controls="glusterfs"
+                                    aria-selected="false">GlusterFS</button>
+                            </li>
+                        </ul>
+
+                        <div class="tab-content sub-tab-content" id="networkStorageTabContent">
+                            <div class="tab-pane fade show active" id="nfs" role="tabpanel" aria-labelledby="nfs-tab">
+                                <div class="mb-4">
+                                    <h5>NFS配置</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">服务器地址</label>
+                                                <input type="text" class="form-control" value="192.168.1.100">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">共享路径</label>
+                                                <input type="text" class="form-control" value="/data/nfs_share">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary">保存配置</button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>镜像文件列表</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>vm1.qcow2</td>
+                                                    <td>30 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="cifs" role="tabpanel" aria-labelledby="cifs-tab">
+                                <div class="mb-4">
+                                    <h5>CIFS配置</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">服务器地址</label>
+                                                <input type="text" class="form-control" value="192.168.1.101">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">共享名称</label>
+                                                <input type="text" class="form-control" value="vm_share">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary">保存配置</button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>镜像文件列表</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>win10.qcow2</td>
+                                                    <td>40 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="iscsi" role="tabpanel" aria-labelledby="iscsi-tab">
+                                <div class="mb-4">
+                                    <h5>iSCSI配置</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">目标地址</label>
+                                                <input type="text" class="form-control" value="192.168.1.102">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">目标名称</label>
+                                                <input type="text" class="form-control"
+                                                    value="iqn.2023-11.vmwm:storage">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary">保存配置</button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>镜像文件列表</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>db_server.qcow2</td>
+                                                    <td>50 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="tab-pane fade" id="glusterfs" role="tabpanel" aria-labelledby="glusterfs-tab">
+                                <div class="mb-4">
+                                    <h5>GlusterFS配置</h5>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">服务器地址</label>
+                                                <input type="text" class="form-control" value="192.168.1.103">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label class="form-label">卷名称</label>
+                                                <input type="text" class="form-control" value="vm_volume">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-primary">保存配置</button>
+                                </div>
+
+                                <div class="mb-4">
+                                    <h5>镜像文件列表</h5>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered directory-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>ID</th>
+                                                    <th>镜像文件名</th>
+                                                    <th>大小</th>
+                                                    <th>格式</th>
+                                                    <th>操作</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>1</td>
+                                                    <td>cluster_vm.qcow2</td>
+                                                    <td>60 GB</td>
+                                                    <td>qcow2</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                        <button class="btn btn-sm btn-danger">删除</button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- CEPH存储池子页面 (默认隐藏) -->
+                    <div class="content-section d-none" id="ceph-storage-content">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4><i class="fas fa-server me-2"></i>CEPH存储池</h4>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>CEPH配置</h5>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Monitors</label>
+                                        <input type="text" class="form-control"
+                                            value="192.168.1.104:6789,192.168.1.105:6789">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">池名称</label>
+                                        <input type="text" class="form-control" value="vm_pool">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">用户名</label>
+                                        <input type="text" class="form-control" value="admin">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">密钥</label>
+                                        <input type="password" class="form-control" value="********">
+                                    </div>
+                                </div>
+                            </div>
+                            <button class="btn btn-primary">保存配置</button>
+                        </div>
+
+                        <div class="mb-4">
+                            <h5>镜像文件列表</h5>
+                            <div class="table-responsive">
+                                <table class="table table-bordered directory-table">
+                                    <thead>
+                                        <tr>
+                                            <th>ID</th>
+                                            <th>镜像文件名</th>
+                                            <th>大小</th>
+                                            <th>格式</th>
+                                            <th>操作</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>1</td>
+                                            <td>ceph_vm1.qcow2</td>
+                                            <td>80 GB</td>
+                                            <td>qcow2</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                <button class="btn btn-sm btn-danger">删除</button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>2</td>
+                                            <td>ceph_vm2.qcow2</td>
+                                            <td>100 GB</td>
+                                            <td>qcow2</td>
+                                            <td>
+                                                <button class="btn btn-sm btn-primary me-1">克隆</button>
+                                                <button class="btn btn-sm btn-danger">删除</button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="./static/js/jquery-3.6.0.min.js"></script>
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // 左侧菜单点击事件
+            $('.sidebar .nav-link').click(function (e) {
+                e.preventDefault();
+                $('.sidebar .nav-link').removeClass('active');
+                $(this).addClass('active');
+
+                const contentId = $(this).data('content') + '-content';
+                $('.content-section').addClass('d-none');
+                $('#' + contentId).removeClass('d-none');
+            });
+
+            // 存储池Card点击事件
+            $('#localStorageCard').click(function () {
+                $('.content-section').addClass('d-none');
+                $('#local-storage-content').removeClass('d-none');
+            });
+
+            $('#isoPoolCard').click(function () {
+                $('.content-section').addClass('d-none');
+                $('#iso-pool-content').removeClass('d-none');
+            });
+
+            $('#networkStorageCard').click(function () {
+                $('.content-section').addClass('d-none');
+                $('#network-storage-content').removeClass('d-none');
+            });
+
+            $('#cephStorageCard').click(function () {
+                $('.content-section').addClass('d-none');
+                $('#ceph-storage-content').removeClass('d-none');
+            });
+
+            // 新建存储池按钮点击事件
+            $('#createStoragePoolBtn').click(function () {
+                alert('新建存储池功能（模拟）');
+            });
+
+            // 上传ISO按钮点击事件
+            $('#uploadIsoBtn').click(function () {
+                alert('上传ISO文件功能（模拟）');
+            });
+
+            // 添加本地目录按钮点击事件
+            $('#addLocalDirectoryBtn').click(function () {
+                alert('添加本地目录功能（模拟）');
+            });
+        });
+    </script>
+</body>
+
+</html>
