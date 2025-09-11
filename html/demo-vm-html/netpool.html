@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网络池管理系统</title>
+    <!-- Bootstrap 5 CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Font Awesome -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+    <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --accent-color: #e74c3c;
+            --light-bg: #f8f9fa;
+            --card-hover: #ecf0f1;
+        }
+
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: var(--light-bg);
+            color: #333;
+        }
+
+        .sidebar {
+            background-color: #fff;
+            border-right: 1px solid #dee2e6;
+            height: 100vh;
+            padding-top: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar .nav-link {
+            color: #495057;
+            border-radius: 0;
+            padding: 12px 20px;
+            transition: all 0.3s;
+        }
+
+        .sidebar .nav-link.active {
+            background-color: var(--light-bg);
+            color: var(--primary-color);
+            font-weight: bold;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sidebar .nav-link:hover {
+            background-color: var(--light-bg);
+        }
+
+        .main-content {
+            padding: 20px;
+            background-color: #fff;
+            min-height: 100vh;
+        }
+
+        .storage-card {
+            cursor: pointer;
+            transition: all 0.3s;
+            height: 100%;
+            margin-bottom: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .storage-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .storage-card .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .sub-view {
+            display: none;
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            background-color: #fff;
+            margin-top: 20px;
+        }
+
+        .table-scroll {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .back-button {
+            margin-bottom: 15px;
+        }
+
+        .progress {
+            height: 10px;
+            margin: 10px 0;
+        }
+
+        .action-buttons .btn {
+            margin-right: 5px;
+        }
+
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            color: var(--primary-color);
+            border-bottom: 2px solid var(--primary-color);
+        }
+
+        .form-section {
+            background-color: var(--light-bg);
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+
+        .editable-cell {
+            cursor: pointer;
+        }
+
+        .editable-cell:hover {
+            background-color: #f8f9fa;
+        }
+
+        .edit-input {
+            width: 100%;
+            padding: 5px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+
+        .editing-row {
+            background-color: #fffde7;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- 左侧导航栏 -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <h5 class="px-3 mb-3">网络管理系统</h5>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="overview">
+                            <i class="fas fa-chart-pie me-2"></i>概览
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="storage-pool">
+                            <i class="fas fa-database me-2"></i>存储池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-target="network-pool">
+                            <i class="fas fa-network-wired me-2"></i>网络池
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-target="interface">
+                            <i class="fas fa-ethernet me-2"></i>网络接口
+                        </a>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- 右侧内容区域 -->
+            <div class="col-md-9 col-lg-10 main-content">
+                <!-- 网络池主页面 -->
+                <div id="network-pool-content">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="text-primary">网络池管理</h4>
+                        <button class="btn btn-primary" id="createNetworkPoolBtn">
+                            <i class="fas fa-plus me-2"></i>新建网络池
+                        </button>
+                    </div>
+
+                    <div class="row">
+                        <!-- NAT网络池卡片 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card storage-card" data-type="nat">
+                                <div class="card-header">
+                                    <i class="fas fa-exchange-alt me-2"></i>NAT网络池
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>网卡名</th>
+                                                    <th>子网信息</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>virbr0</td>
+                                                    <td>192.168.122.0/24</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>virbr1</td>
+                                                    <td>172.16.123.0/24</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Bridge网络池卡片 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card storage-card" data-type="bridge">
+                                <div class="card-header">
+                                    <i class="fas fa-bridge me-2"></i>Bridge网络池
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>网桥名</th>
+                                                    <th>MAC地址</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>bridge0</td>
+                                                    <td>00:10.ab:12:a1:2c</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>bridge1</td>
+                                                    <td>00:20.ab:12:a1:2c</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Host网络池卡片 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card storage-card" data-type="host">
+                                <div class="card-header">
+                                    <i class="fas fa-server me-2"></i>Host网络池
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>网卡名</th>
+                                                    <th>IP地址</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>enp3s0</td>
+                                                    <td>192.168.10.1</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>enp4s0</td>
+                                                    <td>172.15.88.1</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- OpenVSwitch网络池卡片 -->
+                        <div class="col-md-6 mb-4">
+                            <div class="card storage-card" data-type="ovs">
+                                <div class="card-header">
+                                    <i class="fas fa-network-wired me-2"></i>OpenVSwitch池
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-scroll">
+                                        <table class="table table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th>网桥名</th>
+                                                    <th>MAC地址</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>ovs0</td>
+                                                    <td>10:10.ab:12:a1:2c</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>ovs1</td>
+                                                    <td>10:20.ab:12:a1:2c</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 各网络池子页面 -->
+                <div id="subpages">
+                    <!-- NAT网络池子页面 -->
+                    <div id="nat-subpage" class="sub-view">
+                        <!-- 内容会在JS中动态生成 -->
+                    </div>
+
+                    <!-- Bridge网络池子页面 -->
+                    <div id="bridge-subpage" class="sub-view">
+                        <!-- 内容会在JS中动态生成 -->
+                    </div>
+
+                    <!-- Host网络池子页面 -->
+                    <div id="host-subpage" class="sub-view">
+                        <!-- 内容会在JS中动态生成 -->
+                    </div>
+
+                    <!-- OpenVSwitch网络池子页面 -->
+                    <div id="ovs-subpage" class="sub-view">
+                        <!-- 内容会在JS中动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="./static/js/jquery-3.6.0.min.js"></script>
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // 数据存储
+        const networkPools = {
+            nat: [
+                { id: 1, interface: 'virbr0', subnet: '192.168.122.0/24', dhcp: true },
+                { id: 2, interface: 'virbr1', subnet: '172.16.123.0/24', dhcp: false },
+                { id: 3, interface: 'virbr2', subnet: '192.168.13.0/24', dhcp: true },
+                { id: 4, interface: 'virbr3', subnet: '172.17.123.0/24', dhcp: false },
+                { id: 5, interface: 'virbr4', subnet: '192.168.124.0/24', dhcp: true },
+                { id: 6, interface: 'virbr5', subnet: '172.18.123.0/24', dhcp: false },
+            ],
+            bridge: [
+                { id: 1, name: 'bridge0', mac: '00:10.ab:12:a1:2c' },
+                { id: 2, name: 'bridge1', mac: '00:20.ab:12:a1:2c' },
+                { id: 3, name: 'bridge2', mac: '00:30.ab:12:a1:2c' },
+                { id: 4, name: 'bridge3', mac: '00:40.ab:12:a1:2c' },
+                { id: 5, name: 'bridge4', mac: '00:50.ab:12:a1:2c' },
+                { id: 6, name: 'bridge5', mac: '00:60.ab:12:a1:2c' },
+            ],
+            host: [
+                { id: 1, interface: 'enp3s0', ip: '192.168.10.1' },
+                { id: 2, interface: 'enp4s0', ip: '172.15.88.1' }
+            ],
+            ovs: [
+                { id: 1, name: 'ovs0', mac: '10:10.ab:12:a1:2c', dpdk: false },
+                { id: 2, name: 'ovs1', mac: '10:20.ab:12:a1:2c', dpdk: true }
+            ]
+        };
+
+        $(document).ready(function () {
+            // 初始化页面
+            initNetworkPoolPage();
+
+            // 导航链接点击事件
+            $('.sidebar .nav-link').click(function (e) {
+                e.preventDefault();
+                $('.sidebar .nav-link').removeClass('active');
+                $(this).addClass('active');
+
+                const target = $(this).data('target');
+                showContent(target);
+            });
+
+            // 网络池卡片点击事件
+            $('.storage-card').click(function () {
+                const type = $(this).data('type');
+                showSubPage(type);
+            });
+
+            // 返回按钮事件处理（使用事件委托）
+            $(document).on('click', '.back-to-main', function () {
+                $('#network-pool-content').show();
+                $('.sub-view').hide();
+            });
+
+            // 新建网络池按钮点击事件
+            $('#createNetworkPoolBtn').click(function () {
+                alert('新建网络池功能（模拟）');
+            });
+        });
+
+        function initNetworkPoolPage() {
+            // 初始化所有子页面
+            initNATSubPage();
+            initBridgeSubPage();
+            initHostSubPage();
+            initOVSSubPage();
+        }
+
+        function showContent(target) {
+            // 根据目标显示相应内容
+            if (target === 'network-pool') {
+                $('#network-pool-content').show();
+                $('.sub-view').hide();
+            }
+            // 其他内容显示逻辑...
+        }
+
+        function showSubPage(type) {
+            $('#network-pool-content').hide();
+            $('.sub-view').hide();
+
+            switch (type) {
+                case 'nat':
+                    $('#nat-subpage').show();
+                    renderNATPoolTable();
+                    break;
+                case 'bridge':
+                    $('#bridge-subpage').show();
+                    renderBridgePoolTable();
+                    break;
+                case 'host':
+                    $('#host-subpage').show();
+                    renderHostPoolTable();
+                    break;
+                case 'ovs':
+                    $('#ovs-subpage').show();
+                    renderOVSPoolTable();
+                    break;
+            }
+        }
+
+        // NAT网络池子页面初始化
+        function initNATSubPage() {
+            $('#nat-subpage').html(`
+            <div class="sub-page-header mb-4">
+                <button class="btn btn-secondary back-to-main">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </button>
+                <h4 class="d-inline-block ms-3">NAT网络池管理</h4>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">新建NAT网络池</h5>
+                </div>
+                <div class="card-body">
+                    <form id="natPoolForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="natInterface" class="form-label">网卡名</label>
+                                    <input type="text" class="form-control" id="natInterface" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="natSubnet" class="form-label">子网信息</label>
+                                    <input type="text" class="form-control" id="natSubnet" placeholder="192.168.1.0/24" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">DHCP</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="natDHCP">
+                                        <label class="form-check-label" for="natDHCP">启用DHCP</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">新建</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">NAT网络池列表</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>网卡名</th>
+                                    <th>子网信息</th>
+                                    <th>DHCP</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="natPoolTable">
+                                <!-- 动态生成的行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `);
+
+            // NAT表单提交处理
+            $('#natPoolForm').on('submit', function (e) {
+                e.preventDefault();
+                const interface = $('#natInterface').val();
+                const subnet = $('#natSubnet').val();
+                const dhcp = $('#natDHCP').is(':checked');
+
+                // 生成新ID
+                const newId = networkPools.nat.length > 0 ? Math.max(...networkPools.nat.map(p => p.id)) + 1 : 1;
+
+                // 添加到数据数组
+                networkPools.nat.push({
+                    id: newId,
+                    interface: interface,
+                    subnet: subnet,
+                    dhcp: dhcp
+                });
+
+                // 重新渲染表格
+                renderNATPoolTable();
+
+                // 重置表单
+                $(this)[0].reset();
+
+                alert('NAT网络池创建成功！');
+            });
+        }
+
+        // 渲染NAT网络池表格
+        function renderNATPoolTable() {
+            const tableBody = $('#natPoolTable');
+            tableBody.empty();
+
+            networkPools.nat.forEach(pool => {
+                const row = `
+                <tr data-id="${pool.id}">
+                    <td>${pool.id}</td>
+                    <td class="editable-cell" data-field="interface">${pool.interface}</td>
+                    <td class="editable-cell" data-field="subnet">${pool.subnet}</td>
+                    <td class="editable-cell" data-field="dhcp">${pool.dhcp ? '是' : '否'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1 edit-btn">编辑</button>
+                        <button class="btn btn-sm btn-danger delete-btn">删除</button>
+                    </td>
+                </tr>
+            `;
+                tableBody.append(row);
+            });
+
+            // 绑定编辑和删除事件
+            bindTableEvents('#natPoolTable', 'nat');
+        }
+
+        // Bridge网络池子页面初始化
+        function initBridgeSubPage() {
+            $('#bridge-subpage').html(`
+            <div class="sub-page-header mb-4">
+                <button class="btn btn-secondary back-to-main">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </button>
+                <h4 class="d-inline-block ms-3">Bridge网络池管理</h4>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">新建Bridge网络池</h5>
+                </div>
+                <div class="card-body">
+                    <form id="bridgePoolForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="bridgeName" class="form-label">网桥名</label>
+                                    <input type="text" class="form-control" id="bridgeName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="bridgeMAC" class="form-label">MAC地址</label>
+                                    <input type="text" class="form-control" id="bridgeMAC" placeholder="00:00:00:00:00:00" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">新建</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Bridge网络池列表</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>网桥名</th>
+                                    <th>MAC地址</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bridgePoolTable">
+                                <!-- 动态生成的行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `);
+
+            // Bridge表单提交处理
+            $('#bridgePoolForm').on('submit', function (e) {
+                e.preventDefault();
+                const name = $('#bridgeName').val();
+                const mac = $('#bridgeMAC').val();
+
+                // 生成新ID
+                const newId = networkPools.bridge.length > 0 ? Math.max(...networkPools.bridge.map(p => p.id)) + 1 : 1;
+
+                // 添加到数据数组
+                networkPools.bridge.push({
+                    id: newId,
+                    name: name,
+                    mac: mac
+                });
+
+                // 重新渲染表格
+                renderBridgePoolTable();
+
+                // 重置表单
+                $(this)[0].reset();
+
+                alert('Bridge网络池创建成功！');
+            });
+        }
+
+        // 渲染Bridge网络池表格
+        function renderBridgePoolTable() {
+            const tableBody = $('#bridgePoolTable');
+            tableBody.empty();
+
+            networkPools.bridge.forEach(pool => {
+                const row = `
+                <tr data-id="${pool.id}">
+                    <td>${pool.id}</td>
+                    <td class="editable-cell" data-field="name">${pool.name}</td>
+                    <td class="editable-cell" data-field="mac">${pool.mac}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1 edit-btn">编辑</button>
+                        <button class="btn btn-sm btn-danger delete-btn">删除</button>
+                    </td>
+                </tr>
+            `;
+                tableBody.append(row);
+            });
+
+            // 绑定编辑和删除事件
+            bindTableEvents('#bridgePoolTable', 'bridge');
+        }
+
+        // Host网络池子页面初始化
+        function initHostSubPage() {
+            $('#host-subpage').html(`
+            <div class="sub-page-header mb-4">
+                <button class="btn btn-secondary back-to-main">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </button>
+                <h4 class="d-inline-block ms-3">Host网络池管理</h4>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">新建Host网络池</h5>
+                </div>
+                <div class="card-body">
+                    <form id="hostPoolForm">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="hostInterface" class="form-label">物理网卡</label>
+                                    <select class="form-select" id="hostInterface" required>
+                                        <option value="">选择物理网卡</option>
+                                        <option value="enp3s0">enp3s0</option>
+                                        <option value="enp4s0">enp4s0</option>
+                                        <option value="eth0">eth0</option>
+                                        <option value="eth1">eth1</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="mb-3">
+                                    <label for="hostIP" class="form-label">IP地址</label>
+                                    <input type="text" class="form-control" id="hostIP" placeholder="192.168.1.1" required>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">新建</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">Host网络池列表</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>物理网卡名</th>
+                                    <th>IP地址</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="hostPoolTable">
+                                <!-- 动态生成的行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `);
+
+            // Host表单提交处理
+            $('#hostPoolForm').on('submit', function (e) {
+                e.preventDefault();
+                const interface = $('#hostInterface').val();
+                const ip = $('#hostIP').val();
+
+                // 生成新ID
+                const newId = networkPools.host.length > 0 ? Math.max(...networkPools.host.map(p => p.id)) + 1 : 1;
+
+                // 添加到数据数组
+                networkPools.host.push({
+                    id: newId,
+                    interface: interface,
+                    ip: ip
+                });
+
+                // 重新渲染表格
+                renderHostPoolTable();
+
+                // 重置表单
+                $(this)[0].reset();
+
+                alert('Host网络池创建成功！');
+            });
+        }
+
+        // 渲染Host网络池表格
+        function renderHostPoolTable() {
+            const tableBody = $('#hostPoolTable');
+            tableBody.empty();
+
+            networkPools.host.forEach(pool => {
+                const row = `
+                <tr data-id="${pool.id}">
+                    <td>${pool.id}</td>
+                    <td class="editable-cell" data-field="interface">${pool.interface}</td>
+                    <td class="editable-cell" data-field="ip">${pool.ip}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1 edit-btn">编辑</button>
+                        <button class="btn btn-sm btn-danger delete-btn">删除</button>
+                    </td>
+                </tr>
+            `;
+                tableBody.append(row);
+            });
+
+            // 绑定编辑和删除事件
+            bindTableEvents('#hostPoolTable', 'host');
+        }
+
+        // OpenVSwitch网络池子页面初始化
+        function initOVSSubPage() {
+            $('#ovs-subpage').html(`
+            <div class="sub-page-header mb-4">
+                <button class="btn btn-secondary back-to-main">
+                    <i class="fas fa-arrow-left me-2"></i>返回
+                </button>
+                <h4 class="d-inline-block ms-3">OpenVSwitch网络池管理</h4>
+            </div>
+            
+            <div class="card mb-4">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">新建OpenVSwitch网络池</h5>
+                </div>
+                <div class="card-body">
+                    <form id="ovsPoolForm">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="ovsName" class="form-label">网桥名</label>
+                                    <input type="text" class="form-control" id="ovsName" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="ovsMAC" class="form-label">MAC地址</label>
+                                    <input type="text" class="form-control" id="ovsMAC" placeholder="00:00:00:00:00:00" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label class="form-label">DPDK</label>
+                                    <div class="form-check">
+                                        <input type="checkbox" class="form-check-input" id="ovsDPDK">
+                                        <label class="form-check-label" for="ovsDPDK">启用DPDK</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="submit" class="btn btn-primary">新建</button>
+                    </form>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header bg-light">
+                    <h5 class="mb-0">OpenVSwitch网络池列表</h5>
+                </div>
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>网桥名</th>
+                                    <th>MAC地址</th>
+                                    <th>DPDK</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ovsPoolTable">
+                                <!-- 动态生成的行 -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        `);
+
+            // OVS表单提交处理
+            $('#ovsPoolForm').on('submit', function (e) {
+                e.preventDefault();
+                const name = $('#ovsName').val();
+                const mac = $('#ovsMAC').val();
+                const dpdk = $('#ovsDPDK').is(':checked');
+
+                // 生成新ID
+                const newId = networkPools.ovs.length > 0 ? Math.max(...networkPools.ovs.map(p => p.id)) + 1 : 1;
+
+                // 添加到数据数组
+                networkPools.ovs.push({
+                    id: newId,
+                    name: name,
+                    mac: mac,
+                    dpdk: dpdk
+                });
+
+                // 重新渲染表格
+                renderOVSPoolTable();
+
+                // 重置表单
+                $(this)[0].reset();
+
+                alert('OpenVSwitch网络池创建成功！');
+            });
+        }
+
+        // 渲染OpenVSwitch网络池表格
+        function renderOVSPoolTable() {
+            const tableBody = $('#ovsPoolTable');
+            tableBody.empty();
+
+            networkPools.ovs.forEach(pool => {
+                const row = `
+                <tr data-id="${pool.id}">
+                    <td>${pool.id}</td>
+                    <td class="editable-cell" data-field="name">${pool.name}</td>
+                    <td class="editable-cell" data-field="mac">${pool.mac}</td>
+                    <td class="editable-cell" data-field="dpdk">${pool.dpdk ? '是' : '否'}</td>
+                    <td>
+                        <button class="btn btn-sm btn-primary me-1 edit-btn">编辑</button>
+                        <button class="btn btn-sm btn-danger delete-btn">删除</button>
+                    </td>
+                </tr>
+            `;
+                tableBody.append(row);
+            });
+
+            // 绑定编辑和删除事件
+            bindTableEvents('#ovsPoolTable', 'ovs');
+        }
+
+        // 绑定表格编辑和删除事件
+        function bindTableEvents(tableId, poolType) {
+            // 编辑按钮点击事件
+            $(document).on('click', `${tableId} .edit-btn`, function () {
+                const row = $(this).closest('tr');
+                const id = row.data('id');
+                const pool = networkPools[poolType].find(p => p.id === id);
+
+                if (row.hasClass('editing')) {
+                    // 保存编辑
+                    saveRowEdit(row, poolType, pool);
+                    $(this).text('编辑').removeClass('btn-success').addClass('btn-primary');
+                    row.removeClass('editing');
+                } else {
+                    // 进入编辑模式
+                    enterEditMode(row, pool);
+                    $(this).text('保存').removeClass('btn-primary').addClass('btn-success');
+                    row.addClass('editing');
+                }
+            });
+
+            // 删除按钮点击事件
+            $(document).on('click', `${tableId} .delete-btn`, function () {
+                const row = $(this).closest('tr');
+                const id = row.data('id');
+
+                if (confirm('确定要删除这个网络池吗？')) {
+                    // 从数据数组中删除
+                    networkPools[poolType] = networkPools[poolType].filter(p => p.id !== id);
+
+                    // 从DOM中删除行
+                    row.remove();
+
+                    alert('网络池删除成功！');
+                }
+            });
+
+            // 单元格点击事件（直接编辑）
+            $(document).on('click', `${tableId} .editable-cell`, function () {
+                const cell = $(this);
+                const field = cell.data('field');
+                const row = cell.closest('tr');
+                const id = row.data('id');
+                const pool = networkPools[poolType].find(p => p.id === id);
+
+                if (!row.hasClass('editing')) {
+                    enterCellEditMode(cell, field, pool);
+                }
+            });
+        }
+
+        // 进入行编辑模式
+        function enterEditMode(row, pool) {
+            row.find('.editable-cell').each(function () {
+                const cell = $(this);
+                const field = cell.data('field');
+                let value = pool[field];
+
+                if (field === 'dhcp' || field === 'dpdk') {
+                    value = value ? '是' : '否';
+                }
+
+                cell.html(`<input type="text" class="edit-input" value="${value}" data-field="${field}">`);
+            });
+        }
+
+        // 进入单元格编辑模式
+        function enterCellEditMode(cell, field, pool) {
+            let value = pool[field];
+
+            if (field === 'dhcp' || field === 'dpdk') {
+                value = value ? '是' : '否';
+            }
+
+            cell.html(`<input type="text" class="edit-input" value="${value}" data-field="${field}">`);
+
+            // 输入框失去焦点时保存
+            cell.find('input').blur(function () {
+                const newValue = $(this).val();
+                saveCellEdit(cell, field, newValue, pool);
+            });
+
+            // 输入框获得焦点
+            cell.find('input').focus();
+        }
+
+        // 保存行编辑
+        function saveRowEdit(row, poolType, pool) {
+            row.find('.edit-input').each(function () {
+                const input = $(this);
+                const field = input.data('field');
+                let value = input.val();
+
+                if (field === 'dhcp' || field === 'dpdk') {
+                    value = value === '是';
+                }
+
+                pool[field] = value;
+            });
+
+            // 重新渲染行
+            renderTableRow(row, pool);
+        }
+
+        // 保存单元格编辑
+        function saveCellEdit(cell, field, value, pool) {
+            if (field === 'dhcp' || field === 'dpdk') {
+                value = value === '是';
+            }
+
+            pool[field] = value;
+
+            // 重新渲染单元格
+            cell.text(field === 'dhcp' || field === 'dpdk' ? (value ? '是' : '否') : value);
+        }
+
+        // 渲染表格行
+        function renderTableRow(row, pool) {
+            row.find('.editable-cell').each(function () {
+                const cell = $(this);
+                const field = cell.data('field');
+                let value = pool[field];
+
+                if (field === 'dhcp' || field === 'dpdk') {
+                    value = value ? '是' : '否';
+                }
+
+                cell.text(value);
+            });
+        }
+    </script>
+</body>
+
+</html>
