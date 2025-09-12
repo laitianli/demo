@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>虚拟机详情 - VMWM</title>
+    <!-- Bootstrap CSS -->
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"> -->
+    <!-- Font Awesome -->
+    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> -->
+     <link href="./static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="./static/css/all.min.css" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: #f8f9fa;
+            color: #495057;
+        }
+        .vm-detail-container {
+            background-color: #ffffff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-top: 20px;
+        }
+        .vm-info-table {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .vm-info-table th {
+            background-color: #f8f9fa;
+            width: 20%;
+        }
+        .tab-content {
+            padding: 20px;
+            border: 1px solid #dee2e6;
+            border-top: none;
+            border-radius: 0 0 5px 5px;
+            background-color: #ffffff;
+        }
+        .nav-tabs .nav-link {
+            color: #495057;
+        }
+        .nav-tabs .nav-link.active {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        .sub-tab-content {
+            padding: 15px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            margin-top: 10px;
+            background-color: #ffffff;
+        }
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+        .btn-danger {
+            background-color: #dc3545;
+            border-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+    <div class="container vm-detail-container">
+        <!-- 返回按钮 -->
+        <div class="row mb-3">
+            <div class="col-12">
+                <button class="btn btn-secondary" onclick="window.history.back()">
+                    <i class="fas fa-arrow-left me-2"></i>返回列表
+                </button>
+            </div>
+        </div>
+
+        <!-- 虚拟机基本信息 -->
+        <div class="row mb-4">
+            <div class="col-12">
+                <table class="table table-bordered vm-info-table">
+                    <tr>
+                        <th>名称</th>
+                        <td>test-vm-centos</td>
+                        <th>状态</th>
+                        <td><span class="badge bg-success">运行中</span></td>
+                    </tr>
+                    <tr>
+                        <th>VCPUs</th>
+                        <td>4</td>
+                        <th>内存</th>
+                        <td>8192MB</td>
+                    </tr>
+                    <tr>
+                        <th>描述</th>
+                        <td colspan="3">测试用CentOS虚拟机，用于开发环境</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <!-- 主标签页 -->
+        <ul class="nav nav-tabs" id="vmDetailTabs" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="power-tab" data-bs-toggle="tab" data-bs-target="#power" type="button" role="tab" aria-controls="power" aria-selected="true">
+                    <i class="fas fa-power-off me-2"></i>电源
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="console-tab" data-bs-toggle="tab" data-bs-target="#console" type="button" role="tab" aria-controls="console" aria-selected="false">
+                    <i class="fas fa-terminal me-2"></i>控制台
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="snapshot-tab" data-bs-toggle="tab" data-bs-target="#snapshot" type="button" role="tab" aria-controls="snapshot" aria-selected="false">
+                    <i class="fas fa-camera me-2"></i>快照池
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="stats-tab" data-bs-toggle="tab" data-bs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="false">
+                    <i class="fas fa-chart-bar me-2"></i>统计
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="settings-tab" data-bs-toggle="tab" data-bs-target="#settings" type="button" role="tab" aria-controls="settings" aria-selected="false">
+                    <i class="fas fa-cog me-2"></i>设置
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="migration-tab" data-bs-toggle="tab" data-bs-target="#migration" type="button" role="tab" aria-controls="migration" aria-selected="false">
+                    <i class="fas fa-exchange-alt me-2"></i>迁移
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="clone-tab" data-bs-toggle="tab" data-bs-target="#clone" type="button" role="tab" aria-controls="clone" aria-selected="false">
+                    <i class="fas fa-clone me-2"></i>克隆
+                </button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="destroy-tab" data-bs-toggle="tab" data-bs-target="#destroy" type="button" role="tab" aria-controls="destroy" aria-selected="false">
+                    <i class="fas fa-trash-alt me-2"></i>销毁
+                </button>
+            </li>
+        </ul>
+
+        <div class="tab-content" id="vmDetailTabContent">
+            <!-- 电源标签页 -->
+            <div class="tab-pane fade show active" id="power" role="tabpanel" aria-labelledby="power-tab">
+                <div class="sub-tab-content">
+                    <h5>电源管理</h5>
+                    <p>您可以在此控制虚拟机的电源状态。当前状态：<span class="badge bg-success">运行中</span></p>
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-primary"><i class="fas fa-play me-2"></i>开机</button>
+                        <button type="button" class="btn btn-warning"><i class="fas fa-pause me-2"></i>暂停</button>
+                        <button type="button" class="btn btn-secondary"><i class="fas fa-stop me-2"></i>关机</button>
+                        <button type="button" class="btn btn-danger"><i class="fas fa-plug me-2"></i>强制关机</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 控制台标签页 -->
+            <div class="tab-pane fade" id="console" role="tabpanel" aria-labelledby="console-tab">
+                <div class="sub-tab-content">
+                    <h5>控制台设置</h5>
+                    <div class="mb-3">
+                        <label for="consoleType" class="form-label">控制台类型</label>
+                        <select class="form-select" id="consoleType">
+                            <option value="vnc">VNC</option>
+                            <option value="spice">Spice</option>
+                        </select>
+                    </div>
+                    <p class="text-muted">VNC提供基本的远程桌面功能，Spice提供更好的多媒体支持。</p>
+                    <button type="button" class="btn btn-primary">
+                        <i class="fas fa-save me-2"></i>设置控制台类型
+                    </button>
+                </div>
+            </div>
+
+            <!-- 快照池标签页 -->
+            <div class="tab-pane fade" id="snapshot" role="tabpanel" aria-labelledby="snapshot-tab">
+                <ul class="nav nav-tabs" id="snapshotTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="create-snapshot-tab" data-bs-toggle="tab" data-bs-target="#create-snapshot" type="button" role="tab" aria-controls="create-snapshot" aria-selected="true">创建快照</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="restore-snapshot-tab" data-bs-toggle="tab" data-bs-target="#restore-snapshot" type="button" role="tab" aria-controls="restore-snapshot" aria-selected="false">从快照恢复</button>
+                    </li>
+                </ul>
+                <div class="tab-content sub-tab-content" id="snapshotTabContent">
+                    <div class="tab-pane fade show active" id="create-snapshot" role="tabpanel" aria-labelledby="create-snapshot-tab">
+                        <h5>创建快照</h5>
+                        <div class="mb-3">
+                            <label for="snapshotName" class="form-label">快照名称</label>
+                            <input type="text" class="form-control" id="snapshotName" placeholder="请输入快照名称">
+                        </div>
+                        <div class="mb-3">
+                            <label for="snapshotDesc" class="form-label">描述</label>
+                            <textarea class="form-control" id="snapshotDesc" rows="3"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-camera me-2"></i>创建快照
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="restore-snapshot" role="tabpanel" aria-labelledby="restore-snapshot-tab">
+                        <h5>从快照恢复</h5>
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>名称</th>
+                                    <th>创建时间</th>
+                                    <th>描述</th>
+                                    <th>操作</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>snapshot-20231101</td>
+                                    <td>2023-11-01 10:30:25</td>
+                                    <td>系统初始安装完成</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">恢复</button>
+                                        <button class="btn btn-sm btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>snapshot-20231015</td>
+                                    <td>2023-10-15 14:20:10</td>
+                                    <td>安装开发环境</td>
+                                    <td>
+                                        <button class="btn btn-sm btn-primary">恢复</button>
+                                        <button class="btn btn-sm btn-danger">删除</button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 统计标签页 -->
+            <div class="tab-pane fade" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+                <ul class="nav nav-tabs" id="statsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="cpu-stats-tab" data-bs-toggle="tab" data-bs-target="#cpu-stats" type="button" role="tab" aria-controls="cpu-stats" aria-selected="true">CPU</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="memory-stats-tab" data-bs-toggle="tab" data-bs-target="#memory-stats" type="button" role="tab" aria-controls="memory-stats" aria-selected="false">内存</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="network-stats-tab" data-bs-toggle="tab" data-bs-target="#network-stats" type="button" role="tab" aria-controls="network-stats" aria-selected="false">网卡</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="disk-stats-tab" data-bs-toggle="tab" data-bs-target="#disk-stats" type="button" role="tab" aria-controls="disk-stats" aria-selected="false">硬盘</button>
+                    </li>
+                </ul>
+                <div class="tab-content sub-tab-content" id="statsTabContent">
+                    <div class="tab-pane fade show active" id="cpu-stats" role="tabpanel" aria-labelledby="cpu-stats-tab">
+                        <h5>CPU使用率</h5>
+                        <div class="chart-container" id="cpuChart">
+                            <p class="text-center text-muted py-5">CPU使用率图表将在这里显示</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="memory-stats" role="tabpanel" aria-labelledby="memory-stats-tab">
+                        <h5>内存使用率</h5>
+                        <div class="chart-container" id="memoryChart">
+                            <p class="text-center text-muted py-5">内存使用率图表将在这里显示</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="network-stats" role="tabpanel" aria-labelledby="network-stats-tab">
+                        <h5>网卡速率</h5>
+                        <div class="chart-container" id="networkChart">
+                            <p class="text-center text-muted py-5">网卡速率图表将在这里显示</p>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="disk-stats" role="tabpanel" aria-labelledby="disk-stats-tab">
+                        <h5>硬盘读写速率</h5>
+                        <div class="chart-container" id="diskChart">
+                            <p class="text-center text-muted py-5">硬盘读写速率图表将在这里显示</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 设置标签页 -->
+            <div class="tab-pane fade" id="settings" role="tabpanel" aria-labelledby="settings-tab">
+                <ul class="nav nav-tabs" id="settingsTabs" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link active" id="vcpu-settings-tab" data-bs-toggle="tab" data-bs-target="#vcpu-settings" type="button" role="tab" aria-controls="vcpu-settings" aria-selected="true">VCPU</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="memory-settings-tab" data-bs-toggle="tab" data-bs-target="#memory-settings" type="button" role="tab" aria-controls="memory-settings" aria-selected="false">内存</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="iso-settings-tab" data-bs-toggle="tab" data-bs-target="#iso-settings" type="button" role="tab" aria-controls="iso-settings" aria-selected="false">ISO</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="network-settings-tab" data-bs-toggle="tab" data-bs-target="#network-settings" type="button" role="tab" aria-controls="network-settings" aria-selected="false">网络</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="disk-settings-tab" data-bs-toggle="tab" data-bs-target="#disk-settings" type="button" role="tab" aria-controls="disk-settings" aria-selected="false">硬盘</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="xml-settings-tab" data-bs-toggle="tab" data-bs-target="#xml-settings" type="button" role="tab" aria-controls="xml-settings" aria-selected="false">XML</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button class="nav-link" id="kernel-log-tab" data-bs-toggle="tab" data-bs-target="#kernel-log" type="button" role="tab" aria-controls="kernel-log" aria-selected="false">内核日志</button>
+                    </li>
+                </ul>
+                <div class="tab-content sub-tab-content" id="settingsTabContent">
+                    <div class="tab-pane fade show active" id="vcpu-settings" role="tabpanel" aria-labelledby="vcpu-settings-tab">
+                        <h5>VCPU设置</h5>
+                        <div class="mb-3">
+                            <label for="vcpuCount" class="form-label">VCPU数量</label>
+                            <input type="number" class="form-control" id="vcpuCount" value="4" min="1" max="32">
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存设置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="memory-settings" role="tabpanel" aria-labelledby="memory-settings-tab">
+                        <h5>内存设置</h5>
+                        <div class="mb-3">
+                            <label for="memorySize" class="form-label">内存大小(MB)</label>
+                            <input type="number" class="form-control" id="memorySize" value="8192" min="512" max="65536">
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存设置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="iso-settings" role="tabpanel" aria-labelledby="iso-settings-tab">
+                        <h5>ISO设置</h5>
+                        <div class="mb-3">
+                            <label for="isoFile" class="form-label">选择ISO文件</label>
+                            <select class="form-select" id="isoFile">
+                                <option value="">无</option>
+                                <option value="centos.iso">CentOS-7-x86_64-DVD-2009.iso</option>
+                                <option value="ubuntu.iso">ubuntu-22.04-live-server-amd64.iso</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存设置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="network-settings" role="tabpanel" aria-labelledby="network-settings-tab">
+                        <h5>网络设置</h5>
+                        <div class="mb-3">
+                            <label for="networkMode" class="form-label">网络模式</label>
+                            <select class="form-select" id="networkMode">
+                                <option value="nat">NAT</option>
+                                <option value="bridge">桥接</option>
+                                <option value="private">私有网络</option>
+                            </select>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存设置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="disk-settings" role="tabpanel" aria-labelledby="disk-settings-tab">
+                        <h5>硬盘设置</h5>
+                        <div class="mb-3">
+                            <label for="diskSize" class="form-label">硬盘大小(GB)</label>
+                            <input type="number" class="form-control" id="diskSize" value="100" min="10" max="2000">
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存设置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="xml-settings" role="tabpanel" aria-labelledby="xml-settings-tab">
+                        <h5>XML配置</h5>
+                        <div class="mb-3">
+                            <label for="xmlContent" class="form-label">虚拟机XML配置</label>
+                            <textarea class="form-control" id="xmlContent" rows="10"></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-save me-2"></i>保存配置
+                        </button>
+                    </div>
+                    <div class="tab-pane fade" id="kernel-log" role="tabpanel" aria-labelledby="kernel-log-tab">
+                        <h5>内核日志</h5>
+                        <pre class="bg-light p-3 rounded" style="max-height: 400px; overflow: auto;">
+[Nov 1 10:30:25] Linux version 5.4.0-135-generic (buildd@lcy02-amd64-029) (gcc version 9.4.0 (Ubuntu 9.4.0-1ubuntu1~20.04.1)) #152-Ubuntu SMP Wed Nov 23 20:19:22 UTC 2022
+[Nov 1 10:30:25] Command line: BOOT_IMAGE=/boot/vmlinuz-5.4.0-135-generic root=UUID=3f8e9a1d-5b9f-4c9d-8a7b-6c3d9f0e1b2a ro quiet splash vt.handoff=7
+[Nov 1 10:30:25] KERNEL supported cpus:
+[Nov 1 10:30:25]   Intel GenuineIntel
+[Nov 1 10:30:25]   AMD AuthenticAMD
+[Nov 1 10:30:25]   Hygon HygonGenuine
+[Nov 1 10:30:25]   Centaur CentaurHauls
+[Nov 1 10:30:25] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
+[Nov 1 10:30:25] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
+[Nov 1 10:30:25] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
+[Nov 1 10:30:25] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
+[Nov 1 10:30:25] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
+[Nov 1 10:30:25] BIOS-provided physical RAM map:
+[Nov 1 10:30:25] BIOS-e820: [mem 0x0000000000000000-0x000000000009fbff] usable
+[Nov 1 10:30:25] BIOS-e820: [mem 0x000000000009fc00-0x000000000009ffff] reserved
+[Nov 1 10:30:25] BIOS-e820: [mem 0x00000000000f0000-0x00000000000fffff] reserved
+[Nov 1 10:30:25] BIOS-e820: [mem 0x0000000000100000-0x000000007ffdffff] usable
+[Nov 1 10:30:25] BIOS-e820: [mem 0x000000007ffe0000-0x000000007fffffff] reserved
+[Nov 1 10:30:25] BIOS-e820: [mem 0x00000000feffc000-0x00000000feffffff] reserved
+[Nov 1 10:30:25] BIOS-e820: [mem 0x00000000fffc0000-0x00000000ffffffff] reserved
+[Nov 1 10:30:25] NX (Execute Disable) protection: active
+[Nov 1 10:30:25] SMBIOS 2.8 present.
+[Nov 1 10:30:25] DMI: QEMU Standard PC (i440FX + PIIX, 1996), BIOS rel-1.14.0-0-g155821a1990b-prebuilt.qemu.org 04/01/2014
+[Nov 1 10:30:25] Hypervisor detected: KVM
+[Nov 1 10:30:25] kvm-clock: Using msrs 4b564d01 and 4b564d01
+[Nov 1 10:30:25] kvm-clock: cpu 0, msr 2b9d01001, primary cpu clock
+[Nov 1 10:30:25] kvm-clock: using sched offset of 1033028866 cycles
+[Nov 1 10:30:25] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
+[Nov 1 10:30:25] tsc: Detected 2593.996 MHz processor
+                        </pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 迁移标签页 -->
+            <div class="tab-pane fade" id="migration" role="tabpanel" aria-labelledby="migration-tab">
+                <div class="sub-tab-content">
+                    <h5>虚拟机迁移</h5>
+                    <div class="mb-3">
+                        <label for="migrationTarget" class="form-label">迁移目标地址</label>
+                        <input type="text" class="form-control" id="migrationTarget" placeholder="例如: qemu+ssh://target-host/system">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="liveMigration">
+                        <label class="form-check-label" for="liveMigration">Live migration</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="unsafeMigration">
+                        <label class="form-check-label" for="unsafeMigration">Unsafe migration</label>
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="deleteOriginal">
+                        <label class="form-check-label" for="deleteOriginal">Delete original</label>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-exchange-alt me-2"></i>迁移
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 克隆标签页 -->
+            <div class="tab-pane fade" id="clone" role="tabpanel" aria-labelledby="clone-tab">
+                <div class="sub-tab-content">
+                    <h5>虚拟机克隆</h5>
+                    <div class="mb-3">
+                        <label for="cloneName" class="form-label">新虚拟机名称</label>
+                        <input type="text" class="form-control" id="cloneName" placeholder="请输入新虚拟机名称">
+                    </div>
+                    <div class="mb-3">
+                        <label for="cloneDescription" class="form-label">描述</label>
+                        <textarea class="form-control" id="cloneDescription" rows="3"></textarea>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-clone me-2"></i>克隆
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 销毁标签页 -->
+            <div class="tab-pane fade" id="destroy" role="tabpanel" aria-labelledby="destroy-tab">
+                <div class="sub-tab-content">
+                    <h5>销毁虚拟机</h5>
+                    <div class="alert alert-danger">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        警告：此操作将永久删除虚拟机及其关联的硬盘镜像！
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" id="confirmDelete">
+                        <label class="form-check-label" for="confirmDelete">确认删除包括硬盘镜像的虚拟机</label>
+                    </div>
+                    <div class="text-end">
+                        <button type="button" class="btn btn-danger" disabled id="deleteButton">
+                            <i class="fas fa-trash-alt me-2"></i>删除
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap & jQuery JS -->
+    <!-- <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script> -->
+    <script src="./static/js/jquery-3.6.0.min.js"></script>
+    <script src="./static/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            // 确认删除复选框事件
+            $('#confirmDelete').change(function() {
+                $('#deleteButton').prop('disabled', !this.checked);
+            });
+            
+            // 删除按钮点击事件
+            $('#deleteButton').click(function() {
+                if (confirm('确定要永久删除此虚拟机及其所有硬盘镜像吗？此操作不可撤销！')) {
+                    alert('虚拟机删除请求已发送（模拟）');
+                }
+            });
+            
+            // 其他按钮点击事件
+            $('.btn-primary').not('#deleteButton').click(function() {
+                alert('操作请求已发送（模拟）');
+            });
+        });
+    </script>
+</body>
+</html>
